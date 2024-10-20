@@ -7,7 +7,7 @@ import router from '@/router'
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
-  // withCredentials: true, // 跨域请求时是否需要使用凭证
+  withCredentials: true, // 跨域请求时是否需要使用凭证
   // timeout: 5000 // 请求超时时间
 })
 
@@ -18,7 +18,10 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
       // config.headers['token'] = getToken()
     // }
-    config.headers['withCredentials'] = true
+    // config.headers['withCredentials'] = true
+    if(document.cookie.indexOf('token') > -1) {
+      config.headers['Cookie'] = document.cookie
+    }
     return config
   },
   error => {

@@ -39,6 +39,21 @@ export const constantRouterMap = [
       component: () => import('@/views/dashboard/index'),
     }]
   },
+  {
+    path: '/official',
+    component: Layout,
+    redirect: '/official/',
+    name: 'official',
+    meta: { title: '官网管理', icon: 'official'},
+    children: [
+      {
+        path: 'homeCarousel',
+        name: 'homeCarousel',
+        component: () => import('@/views/official/homeCarousel'),
+        meta: { title: '首页轮播图' }
+      }
+    ]
+  },
 
   {
     path: '/system',
