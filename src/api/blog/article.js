@@ -6,7 +6,7 @@ export default {
    * 2.查询所有的文章分类专栏
    * @returns
    */
-  findCategoryList() {
+  findCategoryList () {
     return request({
       url: '/category',
       method: 'get',
@@ -18,7 +18,7 @@ export default {
    * @param {*} article
    * @returns
    */
-  publishArticle(article) {
+  publishArticle (article) {
     return request({
       url: '/article/publish',
       method: 'post',
@@ -32,7 +32,7 @@ export default {
    * @param {number} pageSize 一页的记录数
    * @returns 文章列表
    */
-  findArticleList(queryParam) {
+  findArticleList (queryParam) {
     return request({
       url: `/article/list`,
       method: 'post',
@@ -45,7 +45,7 @@ export default {
    * @param {string} articleId
    * @returns
    */
-  getArticleCategoryById(articleId) {
+  getArticleCategoryById (articleId) {
     return request({
       url: `/category/${articleId}/article`,
       method: 'get'
@@ -57,7 +57,7 @@ export default {
    * @param {string} articleId
    * @returns 删除文章结果
    */
-  removeArticleById(articleId) {
+  removeArticleById (articleId) {
     return request({
       url: `/article/${articleId}`,
       method: 'delete',
@@ -69,7 +69,7 @@ export default {
    * @param {string} articleId
    * @returns
    */
-  getArticleDetailContent(articleId) {
+  getArticleDetailContent (articleId) {
     return request({
       url: `/article/detail/${articleId}`,
       method: 'get'
@@ -81,7 +81,7 @@ export default {
    * @param {string} articleId
    * @returns 文章编辑数据
    */
-  getArticlePublishContent(articleId) {
+  getArticlePublishContent (articleId) {
     return request({
       url: `/article/${articleId}`,
       method: 'get'
@@ -93,7 +93,7 @@ export default {
    * @param {Array} article
    * @returns 修改结果
    */
-  updateArticle(article) {
+  updateArticle (article) {
     return request({
       url: '/article',
       method: 'put',
@@ -106,9 +106,9 @@ export default {
    * @param param 文件
    * @returns {*}
    */
-  uploadImage(param) {
+  uploadImage (param) {
     return request({
-      url: '/article/upload',
+      url: '/back/api/file/upload',
       method: 'post',
       data: param,
       headers: {

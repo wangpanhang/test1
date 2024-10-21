@@ -44,13 +44,31 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/official/',
     name: 'official',
-    meta: { title: '官网管理', icon: 'official'},
+    meta: { title: '官网管理', icon: 'official' },
     children: [
       {
         path: 'homeCarousel',
         name: 'homeCarousel',
-        component: () => import('@/views/official/homeCarousel'),
+        component: () => import('@/views/official/homeCarousel/homeCarousel'),
         meta: { title: '首页轮播图' }
+      },
+      {
+        path: 'developmentCourse',
+        name: 'developmentCourse',
+        component: () => import('@/views/official/developmentCourse/index'),
+        meta: { title: '发展历程' }
+      },
+      {
+        path: 'honorQualification',
+        name: 'honorQualification',
+        component: () => import('@/views/official/honorQualification/index'),
+        meta: { title: '荣誉资质' }
+      },
+      {
+        path: 'recruitManage',
+        name: 'recruitManage',
+        component: () => import('@/views/official/recruitManage/index'),
+        meta: { title: '招聘管理' }
       }
     ]
   },
@@ -60,25 +78,25 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/system/',
     name: 'system',
-    meta: { title: '系统管理', icon: 'system'},
+    meta: { title: '系统管理', icon: 'system' },
     children: [
       {
         path: 'roles',
         name: 'roles',
         component: () => import('@/views/system/role'),
-        meta: { title: '角色管理', icon: 'role'}
+        meta: { title: '角色管理', icon: 'role' }
       },
       {
         path: 'permission',
         name: 'permission',
         component: () => import('@/views/system/permission'),
-        meta: { title: '权限管理', icon: 'permission'}
+        meta: { title: '权限管理', icon: 'permission' }
       },
       {
         path: '/system/user',
         name: 'systemUser',
         component: () => import('@/views/system/user'),
-        meta: { title: '系统用户', icon: 'user'}
+        meta: { title: '系统用户', icon: 'user' }
       }
     ]
   },
@@ -204,7 +222,7 @@ export const constantRouterMap = [
         name: 'userList',
         component: () => import('@/views/user'),
         meta: { title: '用户列表', icon: 'list' }
-      },{
+      }, {
         path: '/operation',
         name: 'operation',
         component: () => import('@/views/user/operation'),
@@ -247,7 +265,7 @@ export const constantRouterMap = [
         name: 'renew',
         component: () => import('@/views/notice/renew'),
         meta: { title: '更新日志', icon: 'renew' }
-      },{
+      }, {
         path: '/notice/article',
         name: 'article',
         component: () => import('@/views/notice/article'),
