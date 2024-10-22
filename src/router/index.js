@@ -69,6 +69,12 @@ export const constantRouterMap = [
         name: 'recruitManage',
         component: () => import('@/views/official/recruitManage/index'),
         meta: { title: '招聘管理' }
+      },
+      {
+        path: 'addRecruitJob',
+        name: 'addRecruitJob',
+        component: () => import('@/views/official/recruitManage/addRecruitJob'),
+        meta: { title: '招聘管理', hidden: true }
       }
     ]
   },

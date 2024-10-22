@@ -1,8 +1,9 @@
 #app {
   // 主体区域
   .main-container {
-    min-height: 100%;
-    transition: margin-left .28s;
+    height: 100%;
+    // min-height: 100%;
+    transition: margin-left 0.28s;
     flex: 1;
     background-color: rgb(240, 242, 245);
     box-sizing: border-box;
@@ -10,6 +11,7 @@
     display: flex;
     flex-direction: column;
     gap: 12px;
+    overflow: hidden;
     // align-items: center;
     // justify-content: center;
     // margin-left: 180px;
@@ -29,13 +31,14 @@
     overflow: hidden;
     //reset element-ui css
     .horizontal-collapse-transition {
-      transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+      transition: 0s width ease-in-out, 0s padding-left ease-in-out,
+        0s padding-right ease-in-out;
     }
-    .el-scrollbar__bar.is-vertical{
+    .el-scrollbar__bar.is-vertical {
       right: 0px;
     }
     .scrollbar-wrapper {
-      overflow-x: hidden!important;
+      overflow-x: hidden !important;
       .el-scrollbar__view {
         height: 100%;
       }
@@ -56,8 +59,8 @@
       height: 100%;
       width: 100% !important;
     }
-    .is-active > .el-submenu__title{
-      color: #f4f4f5!important;
+    .is-active > .el-submenu__title {
+      color: #f4f4f5 !important;
     }
   }
   .hideSidebar {
@@ -76,7 +79,7 @@
     }
     .el-submenu {
       overflow: hidden;
-      &>.el-submenu__title {
+      & > .el-submenu__title {
         padding-left: 10px !important;
         .el-submenu__icon-arrow {
           display: none;
@@ -85,8 +88,8 @@
     }
     .el-menu--collapse {
       .el-submenu {
-        &>.el-submenu__title {
-          &>span {
+        & > .el-submenu__title {
+          & > span {
             height: 0;
             width: 0;
             overflow: hidden;
@@ -97,7 +100,7 @@
       }
     }
   }
-  .sidebar-container .nest-menu .el-submenu>.el-submenu__title,
+  .sidebar-container .nest-menu .el-submenu > .el-submenu__title,
   .sidebar-container .el-submenu .el-menu-item {
     min-width: 180px !important;
     background-color: $subMenuBg !important;
@@ -115,7 +118,7 @@
       margin-left: 0px;
     }
     .sidebar-container {
-      transition: transform .28s;
+      transition: transform 0.28s;
       width: 180px !important;
     }
     &.hideSidebar {
@@ -133,9 +136,9 @@
   }
 }
 
-.el-menu--vertical{
-  & >.el-menu{
-    .svg-icon{
+.el-menu--vertical {
+  & > .el-menu {
+    .svg-icon {
       margin-right: 16px;
     }
   }

@@ -11,10 +11,10 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const CompressionWebpackPlugin = require("compression-webpack-plugin"); //引入打包压缩插件
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const CompressionWebpackPlugin = require("compression-webpack-plugin") //引入打包压缩插件
 
-function resolve(dir) {
+function resolve (dir) {
   return path.join(__dirname, '..', dir)
 }
 
@@ -146,13 +146,13 @@ const webpackConfig = merge(baseWebpackConfig, {
       new OptimizeCSSAssetsPlugin()
     ]
   },
-  externals:{
-    'vue':'Vue',
-    'vuex':'Vuex',
-    'vue-router': 'VueRouter',
-    'axios':'axios',
-    'element-ui':'ELEMENT',
-    'le-markdown-editor':'le-markdown-editor',
+  externals: {
+    // 'vue':'Vue',
+    // 'vuex':'Vuex',
+    // 'vue-router': 'VueRouter',
+    // 'axios':'axios',
+    // 'element-ui':'ELEMENT',
+    // 'le-markdown-editor':'le-markdown-editor',
   },
 })
 

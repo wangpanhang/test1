@@ -4,8 +4,21 @@
       <div class="menu-item" v-for="item in menuList" :key="item.key">
         <template v-if="item.key === '/home'">
           <div class="menu-item-box" @click="handleGoHome">
-            <img :src="curSelectedMenuKey === item.key ? selectedMenuLogo : defaultMenuLogo" class="menu-icon"/>
-            <span :class="['default-text', curSelectedMenuKey === item.key ? 'active-text' : '']">{{ item.name }}</span>
+            <img
+              :src="
+                curSelectedMenuKey === item.key
+                  ? selectedMenuLogo
+                  : defaultMenuLogo
+              "
+              class="menu-icon"
+            />
+            <span
+              :class="[
+                'default-text',
+                curSelectedMenuKey === item.key ? 'active-text' : ''
+              ]"
+              >{{ item.name }}</span
+            >
           </div>
         </template>
         <template v-else>
@@ -13,12 +26,33 @@
             placement="right-start"
             title=""
             width="200"
-            trigger="hover">
+            trigger="hover"
+          >
             <div class="" slot="content"></div>
             <div class="menu-item-box" slot="reference">
-              <img :src="curSelectedMenuKey === item.key ? selectedMenuLogo : defaultMenuLogo" class="menu-icon"/>
-              <span :class="['default-text', curSelectedMenuKey === item.key ? 'active-text' : '']">{{ item.name }}</span>
-              <img :src="curSelectedMenuKey === item.key ? rightSelectedIcon : rightDefaultIcon" class="right-icon"/>
+              <img
+                :src="
+                  curSelectedMenuKey === item.key
+                    ? selectedMenuLogo
+                    : defaultMenuLogo
+                "
+                class="menu-icon"
+              />
+              <span
+                :class="[
+                  'default-text',
+                  curSelectedMenuKey === item.key ? 'active-text' : ''
+                ]"
+                >{{ item.name }}</span
+              >
+              <img
+                :src="
+                  curSelectedMenuKey === item.key
+                    ? rightSelectedIcon
+                    : rightDefaultIcon
+                "
+                class="right-icon"
+              />
             </div>
           </el-popover>
         </template>
@@ -28,59 +62,58 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 // import SidebarItem from './SidebarItem'
 import Logo from "./Logo";
-import defaultMenuLogo from '@/assets/img/default-menu-logo.png'
-import selectedMenuLogo from '@/assets/img/selected-menu-logo.png'
-import rightDefaultIcon from '@/assets/img/right-default-icon.png'
-import rightSelectedIcon from '@/assets/img/right-selected-icon.png'
+import defaultMenuLogo from "@/assets/img/default-menu-logo.png";
+import selectedMenuLogo from "@/assets/img/selected-menu-logo.png";
+import rightDefaultIcon from "@/assets/img/right-default-icon.png";
+import rightSelectedIcon from "@/assets/img/right-selected-icon.png";
 
 export default {
-  components: { Logo},
-  computed: {
-  },
+  components: { Logo },
+  computed: {},
   data() {
     return {
       menuList: [
         {
-          name: '首页',
-          key: '/home'
+          name: "首页",
+          key: "/home"
         },
         {
-          name: '官网管理',
-          key: '/official'
+          name: "官网管理",
+          key: "/official"
         },
         {
-          name: '系统设置',
-          key: '/setting'
+          name: "系统设置",
+          key: "/setting"
         }
       ],
       defaultMenuLogo,
       selectedMenuLogo,
       rightDefaultIcon,
       rightSelectedIcon,
-      curSelectedMenuKey: '/home'
+      curSelectedMenuKey: "/home"
       // cur
-    }
+    };
   },
   watch: {
     $route: {
       handler: function(route) {
-        console.log('route', route)
-        const routeArr = route.path.split('/').filter(item => item)
-        console.log('routeArr', routeArr)
-        this.curSelectedMenuKey = '/' + routeArr[0]
+        console.log("route", route);
+        const routeArr = route.path.split("/").filter(item => item);
+        console.log("routeArr", this.$router);
+        this.curSelectedMenuKey = "/" + routeArr[0];
       },
       immediate: true
     }
   },
   methods: {
     handleGoHome() {
-      this.$router.push('/home')
-    },
+      this.$router.push("/home");
+    }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -120,7 +153,7 @@ export default {
           color: #333;
         }
         .active-text {
-          color: #2080F0;
+          color: #2080f0;
         }
         .right-icon {
           margin-left: auto;
@@ -129,7 +162,6 @@ export default {
           display: block;
         }
       }
-
     }
   }
 }

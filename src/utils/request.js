@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox,} from 'element-ui'
+import { Message, MessageBox, } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
@@ -15,13 +15,11 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // if (document.cookie.indexOf('token') > -1) {
-      // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-      // config.headers['token'] = getToken()
+    // config.headers['X-Token'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+    // config.headers['token'] = getToken()
     // }
     // config.headers['withCredentials'] = true
-    if(document.cookie.indexOf('token') > -1) {
-      config.headers['Cookie'] = document.cookie
-    }
+    // config.headers['Cookie'] = getToken()
     return config
   },
   error => {
@@ -53,14 +51,14 @@ service.interceptors.response.use(
         })
 
         return Promise.resolve(res)
-      }else if (res.code >= 40000) {
+      } else if (res.code >= 40000) {
         Message({
           message: res.message,
           type: 'error',
           duration: 3 * 1000
         })
         return Promise.resolve(res)
-      }else {
+      } else {
         Message({
           message: res.message,
           type: 'error',

@@ -4,42 +4,39 @@
     <div class="navbar-right">
       <div class="user-info">
         <div class="user-avatar">
-          <img :src="defaultImg" alt="avatar">
+          <img :src="avatar ? avatar : defaultImg" alt="avatar" />
         </div>
-        <div class="user-name">账号名称</div>
+        <div class="user-name">{{ name }}</div>
       </div>
       <el-tooltip class="item" effect="light" content="退出" placement="bottom">
-        <div class="logout-icon"></div>
+        <div class="logout-icon" @click="logout"></div>
       </el-tooltip>
-      
     </div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-import defaultImg from '../../../assets/img/default-img.png'
+import { mapGetters } from "vuex";
+import defaultImg from "../../../assets/img/default-img.png";
 
 export default {
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'avatar',
-      'sysUserCode',
-      'token'
-    ])
+    ...mapGetters(["sidebar", "avatar", "sysUserCode", "token", "name"])
   },
   data() {
     return {
       defaultImg
-    }
+    };
   },
-  created() {
-  },
+  created() {},
   methods: {
-
+    logout() {
+      this.$store.dispatch("LogOut").then(() => {
+        location.reload(); // 为了重新实例化vue-router对象 避免bug
+      });
+    }
   }
-}
+};
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
@@ -57,7 +54,7 @@ export default {
   .navbar-left {
     width: 120px;
     height: 50px;
-    background-image: url('../../../assets/img/login_logo.png');
+    background-image: url("../../../assets/img/login_logo.png");
     background-size: 100% 100%;
     background-repeat: no-repeat;
   }
@@ -88,7 +85,7 @@ export default {
     .logout-icon {
       width: 24px;
       height: 24px;
-      background-image: url('../../../assets/img/logout.png');
+      background-image: url("../../../assets/img/logout.png");
       background-size: 100% 100%;
       background-repeat: no-repeat;
       cursor: pointer;
@@ -96,4 +93,3 @@ export default {
   }
 }
 </style>
-

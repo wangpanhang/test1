@@ -5,5 +5,6 @@ const prodEnv = require('./prod.env')
 module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   // BASE_API: '"http://localhost:9001/back"',
-  BASE_API: '"https://www.qhimp.com"',
+  // BASE_API: '"https://www.qhimp.com/back"',
+  BASE_API: '"/back"'
 })

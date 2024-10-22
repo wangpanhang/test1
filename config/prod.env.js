@@ -1,5 +1,5 @@
 'use strict'
 module.exports = {
   NODE_ENV: '"production"',
-  BASE_API: '"http://localhost/back/api"',
+  BASE_API: '"https://www.qhimp.com"',
 }

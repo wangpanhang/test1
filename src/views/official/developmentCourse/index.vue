@@ -21,14 +21,27 @@
         >
           <el-table-column type="index" label="序号" width="56px">
           </el-table-column>
-          <el-table-column prop="historyDate" label="历程发生日期" width="176px">
+          <el-table-column
+            prop="historyDate"
+            label="历程发生日期"
+            width="176px"
+          >
           </el-table-column>
           <el-table-column prop="content" label="事件描述"> </el-table-column>
-          <el-table-column prop="gmtModified" label="最后编辑时间" width="176px">
+          <el-table-column
+            prop="gmtModified"
+            label="最后编辑时间"
+            width="176px"
+          >
           </el-table-column>
           <el-table-column prop="editor" label="最后编辑人" width="136px">
           </el-table-column>
-          <el-table-column prop="action" label="操作" width="136px" fixed="right">
+          <el-table-column
+            prop="action"
+            label="操作"
+            width="136px"
+            fixed="right"
+          >
             <template slot-scope="scope">
               <div class="action-box">
                 <span
@@ -91,7 +104,7 @@ export default {
     ...mapGetters(["name", "roles"])
   },
   mounted() {
-    // this.init();
+    this.init();
     // let that = this;
     // setTimeout(() => {
     //   that.tableData = [
@@ -276,7 +289,6 @@ export default {
         }
       }
     }
-
   }
   /deep/ .el-dialog {
     background-color: #fff;

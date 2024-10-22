@@ -10,7 +10,7 @@
           style="width: 160px"
           size="small"
           @change="handleChange"
-        > 
+        >
           <el-option
             v-for="item in certificateList"
             :key="item.value"
@@ -51,7 +51,12 @@
           </el-table-column>
           <el-table-column prop="userName" label="操作人" width="136px">
           </el-table-column>
-          <el-table-column prop="action" label="操作" width="136px" fixed="right">
+          <el-table-column
+            prop="action"
+            label="操作"
+            width="136px"
+            fixed="right"
+          >
             <template slot-scope="scope">
               <div class="action-box">
                 <span
@@ -114,21 +119,21 @@ export default {
     ...mapGetters(["name", "roles"])
   },
   mounted() {
-    // this.init();
-    let that = this;
-    setTimeout(() => {
-      that.tableData = [
-        {
-          id: 1,
-          certificateUrl:
-            "https://wallpaperm.cmcm.com/4700eaf249b71d56d95aff8ca94313fa.jpg",
-          type: "资历证书",
-          content: "你猜猜我喜不喜欢你呢，猜对有奖哦",
-          uploadDate: "2024-10-21 20:52:45",
-          userName: "小王"
-        }
-      ];
-    }, 300);
+    this.init();
+    // let that = this;
+    // setTimeout(() => {
+    //   that.tableData = [
+    //     {
+    //       id: 1,
+    //       certificateUrl:
+    //         "https://wallpaperm.cmcm.com/4700eaf249b71d56d95aff8ca94313fa.jpg",
+    //       type: "资历证书",
+    //       content: "你猜猜我喜不喜欢你呢，猜对有奖哦",
+    //       uploadDate: "2024-10-21 20:52:45",
+    //       userName: "小王"
+    //     }
+    //   ];
+    // }, 300);
   },
   data() {
     return {
@@ -319,27 +324,27 @@ export default {
       display: flex;
       flex-direction: column;
       .img {
-      width: 109px;
-      height: 40px;
-      object-fit: cover;
-    }
-    .action-box {
-      display: flex;
-      align-items: center;
-      .common-action {
-        font-size: 14px;
-        cursor: pointer;
-        &:not(:last-child) {
-          margin-right: 12px;
+        width: 109px;
+        height: 40px;
+        object-fit: cover;
+      }
+      .action-box {
+        display: flex;
+        align-items: center;
+        .common-action {
+          font-size: 14px;
+          cursor: pointer;
+          &:not(:last-child) {
+            margin-right: 12px;
+          }
+        }
+        .edit-action {
+          color: #2080f0;
+        }
+        .del-action {
+          color: #d03050;
         }
       }
-      .edit-action {
-        color: #2080f0;
-      }
-      .del-action {
-        color: #d03050;
-      }
-    }
     }
   }
   /deep/ .el-dialog {

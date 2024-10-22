@@ -35,17 +35,17 @@
         </el-table-column>
         <el-table-column prop="redirectUrl" label="跳转链接" min-width="344px">
         </el-table-column>
-        <el-table-column prop="gmtCreate" label="上传时间" min-width="176px">
+        <el-table-column prop="createTime" label="上传时间" min-width="176px">
         </el-table-column>
-        <el-table-column prop="creator" label="操作人" min-width="136px">
+        <el-table-column prop="createUser" label="操作人" min-width="136px">
         </el-table-column>
         <el-table-column
-          prop="gmtModified"
+          prop="updateTime"
           label="最后编辑时间"
           min-width="176px"
         >
         </el-table-column>
-        <el-table-column prop="editor" label="最后编辑人" min-width="136px">
+        <el-table-column prop="updateUser" label="最后编辑人" min-width="136px">
         </el-table-column>
         <el-table-column prop="isShow" label="是否显示" min-width="96px">
           <template slot-scope="scope">
@@ -123,22 +123,22 @@ export default {
     ...mapGetters(["name", "roles"])
   },
   mounted() {
-    // this.init();
+    this.init();
   },
   data() {
     return {
       tableData: [
-        {
-          id: 1,
-          carouselUrl:
-            "https://wallpaperm.cmcm.com/4700eaf249b71d56d95aff8ca94313fa.jpg",
-          redirectUrl: "https://www.baidu.com",
-          gmtCreate: "2024-10-21 15:29:35",
-          creator: "小王",
-          gmtModified: "2024-10-21 15:29:35",
-          editor: "小王",
-          isShow: true
-        }
+        // {
+        //   id: 1,
+        //   carouselUrl:
+        //     "https://wallpaperm.cmcm.com/4700eaf249b71d56d95aff8ca94313fa.jpg",
+        //   redirectUrl: "https://www.baidu.com",
+        //   gmtCreate: "2024-10-21 15:29:35",
+        //   creator: "小王",
+        //   gmtModified: "2024-10-21 15:29:35",
+        //   editor: "小王",
+        //   isShow: true
+        // }
       ],
       showCarouselSettingStatus: false,
       showCarouselConfigStatus: false,
@@ -168,13 +168,22 @@ export default {
     async getCarouselConfig() {
       const res = await carousel.getCarouselConfig();
       if (res.code == 200) {
-        this.carouselConfig = res.data;
+        const data = res.data.data || {};
+        if (Object.keys(data).length) {
+          this.carouselConfig = {
+            ...data,
+            draggable: data.draggable == 1
+          };
+        }
       }
     },
     async getCarouselList() {
       const res = await carousel.getCarouselList();
       if (res.code == 200) {
-        this.tableData = res.data;
+        this.tableData = res.data.map(item => {
+          item.isShow = item.isShow == 1;
+          return item;
+        });
       }
     },
     showCarouseActionDialog() {
