@@ -1,7 +1,7 @@
 <template>
   <div class="honor-qualification-container">
     <div class="page-header">
-      <pageHeader title="新建岗位" />
+      <pageHeader title="编辑岗位" />
       <div class="line"></div>
     </div>
     <div class="form-box">
@@ -149,11 +149,16 @@ export default {
   components: {
     pageHeader
   },
-  name: "addRecruitJob",
+  name: "editRecruitJob",
   computed: {
     ...mapGetters(["name", "roles"])
   },
-  mounted() {},
+  created() {
+    this.recruitId = this.$route.params.id || "";
+  },
+  mounted() {
+    this.init();
+  },
   data() {
     return {
       jobObj: {
@@ -253,10 +258,19 @@ export default {
       ],
       descriptionStr: "",
       requirementStr: "",
-      submitStatus: false
+      submitStatus: false,
+      recruitId: ""
     };
   },
   methods: {
+    async init() {
+      const res = await recruitManage.getRecruitInfo({ id: this.recruitId });
+      if (res.code == 200) {
+        this.jobObj = {
+          ...res.data
+        };
+      }
+    },
     saveJob() {
       if (this.submitStatus) {
         this.message.warning("请勿频繁操作");

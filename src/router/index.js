@@ -75,7 +75,31 @@ export const constantRouterMap = [
         name: 'addRecruitJob',
         component: () => import('@/views/official/recruitManage/addRecruitJob'),
         meta: { title: '招聘管理', hidden: true }
-      }
+      },
+      {
+        path: 'recruitJobDetail',
+        name: 'recruitJobDetail',
+        component: () => import('@/views/official/recruitManage/recruitJobDetail'),
+        meta: { title: '招聘管理', hidden: true }
+      },
+      {
+        path: 'editRecruitJob',
+        name: 'editRecruitJob',
+        component: () => import('@/views/official/recruitManage/editRecruitJob'),
+        meta: { title: '招聘管理', hidden: true }
+      },
+      {
+        path: 'contactUs',
+        name: 'contactUs',
+        component: () => import('@/views/official/contactUs/index'),
+        meta: { title: '联系我们' }
+      },
+      {
+        path: 'messageManage',
+        name: 'messageManage',
+        component: () => import('@/views/official/messageManage/index'),
+        meta: { title: '留言管理' }
+      },
     ]
   },
 

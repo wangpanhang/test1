@@ -57,6 +57,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
+        this.breadcrumbTextList = [];
         const routeArr = route.path.split("/").filter(item => item);
         if (routeArr.length === 1) {
           this.breadcrumbTextList[0] = this.breadcrumbFirstRouteObj[
@@ -71,7 +72,8 @@ export default {
           this.breadcrumbTextList = [];
         }
       },
-      immediate: true
+      immediate: true,
+      deep: true
     }
   },
   computed: {
