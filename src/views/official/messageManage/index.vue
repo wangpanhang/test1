@@ -22,7 +22,7 @@
         <el-select
           v-model="filterObj.status"
           placeholder="请选择留言状态"
-          style="width: 160px;"
+          style="width: 160px"
           size="small"
           @change="handleSearch"
         >
@@ -37,7 +37,7 @@
       </div>
       <el-input
         v-model="filterObj.telephone"
-        style="width: 200px;"
+        style="width: 200px"
         size="small"
         suffix-icon="el-icon-search"
         placeholder="请输入联系电话"
@@ -49,7 +49,7 @@
       <div class="el-table-box">
         <el-table
           :data="tableData"
-          style="width: 100%;"
+          style="width: 100%"
           :border="false"
           height="100%"
           v-loading="loading"
@@ -60,33 +60,46 @@
         >
           <el-table-column type="index" label="序号" width="56px">
           </el-table-column>
+          <el-table-column prop="messageTime" label="留言时间" width="180px">
+          </el-table-column>
+          <el-table-column prop="authorName" label="联系人" width="160px">
+          </el-table-column>
+          <el-table-column prop="telephone" label="联系电话" width="160px">
+          </el-table-column>
           <el-table-column
-            prop="historyDate"
-            label="历程发生日期"
-            width="176px"
+            prop="content"
+            :show-overflow-tooltip="true"
+            label="留言预览"
           >
           </el-table-column>
-          <el-table-column prop="content" label="事件描述"> </el-table-column>
-          <el-table-column
-            prop="gmtModified"
-            label="最后编辑时间"
-            width="176px"
-          >
+          <el-table-column prop="status" label="留言状态" width="120px">
+            <template slot-scope="scope">
+              <div class="processed" v-if="scope.row.status == 1">已处理</div>
+              <div class="undisposed" v-else>待处理</div>
+            </template>
           </el-table-column>
-          <el-table-column prop="editor" label="最后编辑人" width="136px">
+          <el-table-column prop="handleUser" label="处理人" width="120px">
+            <template slot-scope="scope">
+              {{ scope.row.handleUser || "--" }}
+            </template>
           </el-table-column>
           <el-table-column
             prop="action"
             label="操作"
-            width="136px"
+            width="160px"
             fixed="right"
           >
             <template slot-scope="scope">
               <div class="action-box">
-                <span
-                  class="common-action edit-action"
-                  @click="handleEdit(scope.row)"
-                  >编辑</span
+                <el-button type="text" @click="handleDetail(scope.row)"
+                  >详情</el-button
+                >
+                <el-button
+                  type="text"
+                  style="margin-right: 12px"
+                  :disabled="scope.row.status == 1"
+                  @click="showProcessDialog(scope.row)"
+                  >处理</el-button
                 >
                 <el-popconfirm
                   confirm-button-text="确定"
@@ -95,11 +108,11 @@
                   confirm-button-type="danger"
                   icon="el-icon-info"
                   icon-color="red"
-                  title="删除后不可恢复，确定删除该历史事件吗？"
+                  title="删除后不可恢复，确定删除该留言吗？"
                   @confirm="handleDelCourse(scope.row)"
                 >
-                  <span class="common-action del-action" slot="reference"
-                    >删除</span
+                  <el-button type="text" style="color: #d03050" slot="reference"
+                    >删除</el-button
                   >
                 </el-popconfirm>
               </div>
@@ -108,13 +121,24 @@
         </el-table>
         <!-- 分页 -->
         <Pagination
-          style="text-align: right;"
+          style="text-align: right"
           ref="pagination"
           @handleSizeChange="handleSizeChange"
           @handleCurrentChange="handleCurrentChange"
         />
       </div>
     </div>
+    <ProcessDialog
+      :showProcessStatus="showProcessStatus"
+      @update:showProcessStatus="showProcessStatus = false"
+      @updateProcess="updateProcess"
+    />
+    <DetailDialog
+      :showDetailStatus="showDetailStatus"
+      :messageId="messageId"
+      :status="messageStatus"
+      @update:showDetailStatus="showDetailStatus = false"
+    />
   </div>
 </template>
 
@@ -123,61 +147,56 @@ import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import Pagination from "@/components/Pagination";
 import messageManage from "@/api/official/messageManage";
+import ProcessDialog from "./components/ProcessDialog.vue";
+import DetailDialog from "./components/DetailDialog.vue";
 import moment from "moment";
 
 export default {
   components: {
     pageHeader,
-    Pagination
+    Pagination,
+    ProcessDialog,
+    DetailDialog,
   },
   name: "messageManage",
   computed: {
-    ...mapGetters(["name", "roles"])
+    ...mapGetters(["name", "roles"]),
   },
   mounted() {
-    // this.init();
-    // let that = this;
-    // setTimeout(() => {
-    //   that.tableData = [
-    //     {
-    //       id: 1,
-    //       historyDate: "2024-10-21",
-    //       content: "你猜猜我喜不喜欢你呢，猜对有奖哦",
-    //       gmtModified: "2024-10-21",
-    //       editor: "小王"
-    //     }
-    //   ];
-    // }, 300);
+    this.init();
   },
   data() {
     return {
       tableData: [],
       loading: false,
       dateRange: [
-        moment()
-          .subtract(90, "day")
-          .format("YYYY-MM-DD") + " 00:00:00",
-        moment().format("YYYY-MM-DD") + " 23:59:59"
+        moment().subtract(90, "day").format("YYYY-MM-DD") + " 00:00:00",
+        moment().format("YYYY-MM-DD") + " 23:59:59",
       ],
       filterObj: {
         startTime: "",
         endTime: "",
         status: "",
-        telephone: ""
+        telephone: "",
       },
       statusOptions: [
         {
           value: "",
-          label: "全部状态"
-        }
+          label: "全部状态",
+        },
+        {
+          value: "0",
+          label: "待处理",
+        },
+        {
+          value: "1",
+          label: "已处理",
+        },
       ],
-      showCourseEventStatus: false,
-      actionType: "",
-      courseEventObj: {
-        historyDate: "",
-        content: ""
-      },
-      courseId: ""
+      showProcessStatus: false,
+      showDetailStatus: false,
+      messageId: "",
+      messageStatus: "",
     };
   },
   methods: {
@@ -196,7 +215,7 @@ export default {
         telephone: this.filterObj.telephone || "",
         status: this.filterObj.status,
         pageIndex: this.$refs.pagination.pageParam.pageIndex,
-        pageSize: this.$refs.pagination.pageParam.pageSize
+        pageSize: this.$refs.pagination.pageParam.pageSize,
       };
       const res = await messageManage.messageList(params);
       if (res.code == 200) {
@@ -205,60 +224,39 @@ export default {
         this.$refs.pagination.pageParam.totalCount = res.data.total;
       }
     },
-    showCourseEventDialog() {
-      this.actionType = "add";
-      this.showCourseEventStatus = true;
-    },
-    async updateCourseEvent(courseObj) {
-      try {
-        this.loading = true;
-        let res = null;
-        if (this.actionType == "add") {
-          const params = {
-            content: courseObj.content.trim(),
-            historyDate: courseObj.dateVal
-          };
-          res = await developmentCourse.addHistoryLine(params);
-        } else {
-          const params = {
-            id: this.courseId,
-            content: courseObj.content.trim()
-          };
-          res = await developmentCourse.editHistoryLineList(params);
-        }
-        if (res.code == 200) {
-          this.$message.success(
-            `${this.actionType == "add" ? "新增" : "编辑"}历程成功`
-          );
-          // 重新刷新列表
-          this.modifyPage(1);
-          this.getMessageList();
-        }
-      } catch (_) {
-        this.$message.error("历程事件更新失败，请重试");
-      } finally {
-        this.loading = false;
-      }
-    },
     modifyPage(index) {
       this.$refs.pagination.pageParam.pageIndex = index;
     },
-    handleEdit(row) {
-      this.courseEventObj = {
-        historyDate: row.historyDate,
-        content: row.content
-      };
-      this.courseId = row.id;
-      this.actionType = "edit";
-      this.showCourseEventStatus = true;
+    showProcessDialog(row) {
+      this.messageId = row.id;
+      this.showProcessStatus = true;
     },
-    async handleDelCourse(row) {
+    async updateProcess(data) {
+      const params = {
+        id: this.messageId,
+        type: data.type,
+        content: data.content ? data.content.trim() : "",
+      };
+      const res = await messageManage.handleMessage(params);
+      if (res.code == 200) {
+        this.$message.success("处理成功");
+        this.getMessageList();
+      } else {
+        this.$message.error("处理失败");
+      }
+    },
+    handleDetail(row) {
+      this.messageId = row.id;
+      this.messageStatus = row.status || 0;
+      this.showDetailStatus = true;
+    },
+    async handleDelMessage(row) {
       try {
         this.loading = true;
         const params = {
-          id: row.id
+          id: row.id,
         };
-        const res = await developmentCourse.delHistoryLine(params);
+        const res = await messageManage.delMessage(params);
         if (res.code == 200) {
           this.$message.success("删除成功！");
           this.getMessageList();
@@ -276,8 +274,8 @@ export default {
     },
     handleCurrentChange() {
       this.getMessageList();
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -317,6 +315,32 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
+      .processed {
+        width: max-content;
+        height: 28px;
+        line-height: 28px;
+        box-sizing: border-box;
+        padding: 0 8px;
+        border-radius: 2px;
+        border: 1px solid rgba(24, 160, 88, 0.3);
+        background: #eaf5ef;
+        text-align: center;
+        color: #18a058;
+        font-size: 14px;
+      }
+      .undisposed {
+        width: max-content;
+        height: 28px;
+        line-height: 28px;
+        box-sizing: border-box;
+        padding: 0 8px;
+        border-radius: 2px;
+        border: 1px solid rgba(252, 176, 64, 0.3);
+        background: #fdf4e7;
+        text-align: center;
+        color: #fcb040;
+        font-size: 14px;
+      }
       .action-box {
         display: flex;
         align-items: center;

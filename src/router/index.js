@@ -100,6 +100,12 @@ export const constantRouterMap = [
         component: () => import('@/views/official/messageManage/index'),
         meta: { title: '留言管理' }
       },
+      {
+        path: 'articleList',
+        name: 'articleList',
+        component: () => import('@/views/official/articleList/index'),
+        meta: { title: '文章列表' }
+      },
     ]
   },
 

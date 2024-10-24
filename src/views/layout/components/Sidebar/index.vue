@@ -15,7 +15,7 @@
             <span
               :class="[
                 'default-text',
-                curSelectedMenuKey === item.key ? 'active-text' : ''
+                curSelectedMenuKey === item.key ? 'active-text' : '',
               ]"
               >{{ item.name }}</span
             >
@@ -32,7 +32,7 @@
                       'page-item',
                       curSelectedRouteName == 'homeCarousel'
                         ? 'selected-page'
-                        : ''
+                        : '',
                     ]"
                     @click="handleGoPage('homeCarousel')"
                   >
@@ -53,7 +53,17 @@
               <div class="column">
                 <div class="page-box">
                   <div class="title">咨询中心</div>
-                  <div class="page-item">文章列表</div>
+                  <div
+                    :class="[
+                      'page-item',
+                      curSelectedRouteName == 'articleList'
+                        ? 'selected-page'
+                        : '',
+                    ]"
+                    @click="handleGoPage('articleList')"
+                  >
+                    文章列表
+                  </div>
                   <div class="page-item">文章分类</div>
                 </div>
               </div>
@@ -65,7 +75,7 @@
                       'page-item',
                       curSelectedRouteName == 'developmentCourse'
                         ? 'selected-page'
-                        : ''
+                        : '',
                     ]"
                     @click="handleGoPage('developmentCourse')"
                   >
@@ -76,7 +86,7 @@
                       'page-item',
                       curSelectedRouteName == 'honorQualification'
                         ? 'selected-page'
-                        : ''
+                        : '',
                     ]"
                     @click="handleGoPage('honorQualification')"
                   >
@@ -87,7 +97,7 @@
                       'page-item',
                       curSelectedRouteName == 'recruitManage'
                         ? 'selected-page'
-                        : ''
+                        : '',
                     ]"
                     @click="handleGoPage('recruitManage')"
                   >
@@ -96,7 +106,9 @@
                   <div
                     :class="[
                       'page-item',
-                      curSelectedRouteName == 'contactUs' ? 'selected-page' : ''
+                      curSelectedRouteName == 'contactUs'
+                        ? 'selected-page'
+                        : '',
                     ]"
                     @click="handleGoPage('contactUs')"
                   >
@@ -107,7 +119,7 @@
                       'page-item',
                       curSelectedRouteName == 'messageManage'
                         ? 'selected-page'
-                        : ''
+                        : '',
                     ]"
                     @click="handleGoPage('messageManage')"
                   >
@@ -150,7 +162,7 @@
               <span
                 :class="[
                   'default-text',
-                  curSelectedMenuKey === item.key ? 'active-text' : ''
+                  curSelectedMenuKey === item.key ? 'active-text' : '',
                 ]"
                 >{{ item.name }}</span
               >
@@ -187,36 +199,36 @@ export default {
       menuList: [
         {
           name: "首页",
-          key: "/home"
+          key: "/home",
         },
         {
           name: "官网管理",
-          key: "/official"
+          key: "/official",
         },
         {
           name: "系统设置",
-          key: "/setting"
-        }
+          key: "/setting",
+        },
       ],
       defaultMenuLogo,
       selectedMenuLogo,
       rightDefaultIcon,
       rightSelectedIcon,
       curSelectedMenuKey: "/home",
-      curSelectedRouteName: ""
+      curSelectedRouteName: "",
       // cur
     };
   },
   watch: {
     $route: {
-      handler: function(route) {
-        const routeArr = route.path.split("/").filter(item => item);
+      handler: function (route) {
+        const routeArr = route.path.split("/").filter((item) => item);
 
         this.curSelectedMenuKey = "/" + routeArr[0];
         this.curSelectedRouteName = route.name;
       },
-      immediate: true
-    }
+      immediate: true,
+    },
   },
   methods: {
     handleGoHome() {
@@ -224,8 +236,8 @@ export default {
     },
     handleGoPage(name) {
       this.$router.push({ name });
-    }
-  }
+    },
+  },
 };
 </script>
 
