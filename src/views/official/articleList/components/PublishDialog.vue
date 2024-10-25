@@ -47,8 +47,8 @@
       <div class="tips">
         {{
           type == "unPublish"
-            ? "下架后岗位将不会在官网招聘页面显示，确定要下架吗？"
-            : "发布后岗位将在官网招聘页面进行显示，确定发布该岗位吗？"
+            ? "下架后文章将不会在官网页面显示，确定要下架吗？"
+            : "发布文章将在官网页面进行显示，确定发布吗？"
         }}
       </div>
     </div>
@@ -57,11 +57,11 @@
       <div
         class="common-btn unpublish-btn"
         v-if="type == 'unPublish'"
-        @click="handlePublishJob"
+        @click="handlePublishArticle"
       >
         确定
       </div>
-      <div class="common-btn publish-btn" v-else @click="handlePublishJob">
+      <div class="common-btn publish-btn" v-else @click="handlePublishArticle">
         确定
       </div>
     </div>
@@ -84,8 +84,8 @@ export default {
     return {};
   },
   methods: {
-    handlePublishJob() {
-      this.$emit("handlePublishJob");
+    handlePublishArticle() {
+      this.$emit("handlePublishArticle");
       this.closeDialog();
     },
     closeDialog() {

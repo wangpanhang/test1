@@ -16,7 +16,7 @@
           <div class="label">文章类型：</div>
           <el-select
             v-model="filterObj.categoryId"
-            placeholder="请选择留言状态"
+            placeholder="请选择文章类型"
             style="width: 160px"
             size="small"
             @change="handleSearch"
@@ -34,7 +34,7 @@
           <div class="label">文章状态：</div>
           <el-select
             v-model="filterObj.state"
-            placeholder="请选择留言状态"
+            placeholder="请选择文章状态"
             style="width: 160px"
             size="small"
             @change="handleSearch"
@@ -53,7 +53,7 @@
         <div class="common-btn add-btn" @click="showUploadCertificateDialog">
           新增文章
         </div>
-        <div class="common-btn line-btn" @click="showUploadCertificateDialog">
+        <div class="common-btn line-btn" @click="showBatchSettingDialog">
           批量设置
         </div>
       </div>
@@ -73,34 +73,40 @@
         >
           <el-table-column type="index" label="序号" width="56px">
           </el-table-column>
-          <el-table-column prop="jobTitle" label="文章封面" width="120px">
+          <el-table-column prop="cover" label="文章封面" width="120px">
+            <template slot-scope="scope">
+              <div class="img">
+                <img :src="scope.row.cover" class="img" />
+              </div>
+              <!--  -->
+            </template>
           </el-table-column>
           <el-table-column
-            prop="recruitSection"
+            prop="title"
             width="444px"
             :show-overflow-tooltip="true"
             label="文章标题"
           >
           </el-table-column>
-          <el-table-column prop="workPlace" label="文章类型" width="120px">
+          <el-table-column prop="categoryName" label="文章类型" width="120px">
           </el-table-column>
-          <el-table-column prop="jobStatus" label="文章状态" width="120px">
+          <el-table-column prop="categoryId" label="文章状态" width="120px">
             <template slot-scope="scope">
-              <div v-if="scope.row.jobStatus == 1" class="published">
+              <div v-if="scope.row.categoryId == 1" class="published">
                 已发布
               </div>
-              <div v-if="scope.row.jobStatus == 2" class="unpublished">
+              <div v-if="scope.row.categoryId == 2" class="unpublished">
                 未发布
               </div>
             </template>
           </el-table-column>
-          <el-table-column prop="recruitNumber" label="浏览量" width="120px">
+          <el-table-column prop="viewCount" label="浏览量" width="120px">
           </el-table-column>
-          <el-table-column prop="email" label="点赞数" width="120px">
+          <el-table-column prop="goodCount" label="点赞数" width="120px">
           </el-table-column>
-          <el-table-column prop="email" label="评论数" width="120px">
+          <el-table-column prop="commentCount" label="评论数" width="120px">
           </el-table-column>
-          <el-table-column prop="gmtCreate" label="创建时间" width="180px">
+          <el-table-column prop="publishTime" label="创建时间" width="180px">
           </el-table-column>
           <el-table-column
             prop="action"
@@ -160,12 +166,18 @@
         />
       </div>
     </div>
-    <!-- <PublishDialog
+    <PublishDialog
       :showPublishStatus="showPublishStatus"
       :type="actionType"
       @update:showPublishStatus="showPublishStatus = false"
-      @handlePublishJob="handlePublishJob"
-    /> -->
+      @handlePublishArticle="handlePublishArticle"
+    />
+    <BatchSettingDialog
+      :showBatchSettingStatus="showBatchSettingStatus"
+      :batchSettingObj="batchSettingObj"
+      @update:showBatchSettingStatus="showBatchSettingStatus = false"
+      @updateBatchSetting="updateBatchSetting"
+    />
   </div>
 </template>
 
@@ -174,13 +186,15 @@ import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import Pagination from "@/components/Pagination";
 import articleList from "@/api/official/articleList";
-// import PublishDialog from "./components/PublishDialog.vue";
+import PublishDialog from "./components/PublishDialog.vue";
+import BatchSettingDialog from "./components/BatchSettingDialog.vue";
 
 export default {
   components: {
     pageHeader,
     Pagination,
-    // PublishDialog
+    PublishDialog,
+    BatchSettingDialog,
   },
   name: "articleList",
   computed: {
@@ -233,6 +247,12 @@ export default {
       ],
       showPublishStatus: false,
       actionType: "",
+      showBatchSettingStatus: false,
+      batchSettingObj: {
+        allowComment: true,
+        showComment: true,
+        checkList: [],
+      },
     };
   },
   methods: {
@@ -269,6 +289,12 @@ export default {
     handleGoDetail(row) {
       console.log("row", row);
     },
+    showBatchSettingDialog() {
+      this.showBatchSettingStatus = true;
+    },
+    updateBatchSetting(obj) {
+      this.batchSettingObj = obj;
+    },
     handleUnPublish(row) {
       this.actionType = "unPublish";
       this.jobId = row.id;
@@ -304,7 +330,7 @@ export default {
     handleCurrentChange() {
       this.getArticleList();
     },
-    async handlePublishJob() {
+    async handlePublishArticle() {
       try {
         this.loading = true;
         const params = {
@@ -402,6 +428,11 @@ export default {
       height: 100%;
       display: flex;
       flex-direction: column;
+      .img {
+        width: 56px;
+        height: 42px;
+        object-fit: cover;
+      }
       .published {
         display: flex;
         width: max-content;
