@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import article from "@/api/blog/article.js";
+import article from "@/api/upload.js";
 export default {
   props: {
     showUploadCertificateStatus: {
@@ -161,7 +161,7 @@ export default {
     async handleUpload(file) {
       let formData = new FormData();
       formData.append("image", file);
-      const res = await article.uploadImage(formData);
+      const res = await upload.uploadImg(formData);
       if (res.code == 200) {
         this.uploadUrl = res.data.url;
         this.$message.success("上传图片成功");

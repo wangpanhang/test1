@@ -24,10 +24,3 @@ export function logout () {
     method: 'post'
   })
 }
-
-export function wxLogin () {
-  return request({
-    url: '/system/wx_login',
-    method: 'get'
-  })
-}

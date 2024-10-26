@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 export default {
-  // 新增历程
+  // 新增文章
   addArticle (params) {
     return request({
       url: `/back/api/article/publish`,
@@ -9,7 +9,7 @@ export default {
       data: params
     })
   },
-  // 删除历程
+  // 删除文章
   delArticle (params) {
     return request({
       url: `/back/api/article/delete`,
@@ -17,7 +17,7 @@ export default {
       data: params
     })
   },
-  // 历程信息
+  // 文章信息
   getArticleInfo (params) {
     return request({
       url: `/back/api/article/info`,
@@ -25,7 +25,7 @@ export default {
       data: params
     })
   },
-  // 历程列表
+  // 文章列表
   getArticleList (params) {
     return request({
       url: `/back/api/article/list`,
@@ -33,10 +33,18 @@ export default {
       data: params
     })
   },
-  // 编辑历程
+  // 编辑文章
   editArticleList (params) {
     return request({
       url: `/back/api/article/update`,
+      method: 'post',
+      data: params
+    })
+  },
+  // 发布/下架文章
+  updateArticleList (params) {
+    return request({
+      url: `/back/api/article/status/update`,
       method: 'post',
       data: params
     })

@@ -147,7 +147,7 @@
 import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import contactUs from "@/api/official/contactUs.js";
-import article from "@/api/blog/article.js";
+import article from "@/api/upload.js";
 
 export default {
   components: {
@@ -251,7 +251,7 @@ export default {
     async handleUpload1(file) {
       let formData = new FormData();
       formData.append("image", file.file);
-      const res = await article.uploadImage(formData);
+      const res = await upload.uploadImg(formData);
       if (res.code == 200) {
         this.qrcode1 = res.data.fileName;
         this.$message.success("上传图片成功");
@@ -262,7 +262,7 @@ export default {
     async handleUpload2(file) {
       let formData = new FormData();
       formData.append("image", file.file);
-      const res = await article.uploadImage(formData);
+      const res = await upload.uploadImg(formData);
       if (res.code == 200) {
         this.qrcode2 = res.data.fileName;
         this.$message.success("上传图片成功");
@@ -273,7 +273,7 @@ export default {
     async handleUpload3(file) {
       let formData = new FormData();
       formData.append("image", file.file);
-      const res = await article.uploadImage(formData);
+      const res = await upload.uploadImg(formData);
       if (res.code == 200) {
         this.qrcode3 = res.data.fileName;
         this.$message.success("上传图片成功");

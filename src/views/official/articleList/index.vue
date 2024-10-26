@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="common-btn-box">
-        <div class="common-btn add-btn" @click="showUploadCertificateDialog">
+        <div class="common-btn add-btn" @click="goAddArticle">
           新增文章
         </div>
         <div class="common-btn line-btn" @click="showBatchSettingDialog">
@@ -92,12 +92,13 @@
           </el-table-column>
           <el-table-column prop="categoryId" label="文章状态" width="120px">
             <template slot-scope="scope">
-              <div v-if="scope.row.categoryId == 1" class="published">
+              <div v-if="scope.row.state == 1" class="published">
                 已发布
               </div>
-              <div v-if="scope.row.categoryId == 2" class="unpublished">
+              <div v-if="scope.row.state == 0" class="unpublished">
                 未发布
               </div>
+              <div v-if="scope.row.state == 3" class="timely-publish"></div>
             </template>
           </el-table-column>
           <el-table-column prop="viewCount" label="浏览量" width="120px">
@@ -105,6 +106,10 @@
           <el-table-column prop="goodCount" label="点赞数" width="120px">
           </el-table-column>
           <el-table-column prop="commentCount" label="评论数" width="120px">
+            <template slot-scope="scope">
+              <div class="no-count" v-if="!scope.row.commentCount">0</div>
+              <div class="has-count" v-else>{{ scope.row.commentCount }}</div>
+            </template>
           </el-table-column>
           <el-table-column prop="publishTime" label="创建时间" width="180px">
           </el-table-column>
@@ -129,13 +134,13 @@
 
                 <span
                   class="common-action removed-action"
-                  v-if="scope.row.jobStatus == 1"
+                  v-if="scope.row.state == 1"
                   @click="handleUnPublish(scope.row)"
                   >下架</span
                 >
                 <span
                   class="common-action publish-action"
-                  v-if="scope.row.jobStatus == 2"
+                  v-if="scope.row.state == 0"
                   @click="handlePublish(scope.row)"
                   >发布</span
                 >
@@ -194,11 +199,11 @@ export default {
     pageHeader,
     Pagination,
     PublishDialog,
-    BatchSettingDialog,
+    BatchSettingDialog
   },
   name: "articleList",
   computed: {
-    ...mapGetters(["name", "roles"]),
+    ...mapGetters(["name", "roles"])
   },
   mounted() {
     this.init();
@@ -211,39 +216,39 @@ export default {
       filterObj: {
         categoryId: "",
         state: "",
-        title: "",
+        title: ""
       },
       typeList: [
         {
           value: "",
-          label: "全部类型",
+          label: "全部类型"
         },
         {
           value: 1,
-          label: "公司新闻",
+          label: "公司新闻"
         },
         {
           value: 2,
-          label: "行业动态",
+          label: "行业动态"
         },
         {
           value: 3,
-          label: "技术方案",
-        },
+          label: "技术方案"
+        }
       ],
       stateList: [
         {
           value: "",
-          label: "全部状态",
+          label: "全部状态"
         },
         {
           value: 0,
-          label: "未发布",
+          label: "未发布"
         },
         {
           value: 1,
-          label: "已发布",
-        },
+          label: "已发布"
+        }
       ],
       showPublishStatus: false,
       actionType: "",
@@ -251,8 +256,9 @@ export default {
       batchSettingObj: {
         allowComment: true,
         showComment: true,
-        checkList: [],
+        checkList: []
       },
+      articleId: ""
     };
   },
   methods: {
@@ -264,7 +270,7 @@ export default {
       let params = {
         pageIndex: this.$refs.pagination.pageParam.pageIndex,
         pageSize: this.$refs.pagination.pageParam.pageSize,
-        ...this.filterObj,
+        ...this.filterObj
       };
       const res = await articleList.getArticleList(params);
       if (res.code == 200) {
@@ -277,17 +283,27 @@ export default {
       this.modifyPage(1);
       this.getArticleList();
     },
-    showUploadCertificateDialog() {
-      this.$router.push({ name: "addRecruitJob" });
+    goAddArticle() {
+      this.$router.push({ name: "addArticle" });
     },
     modifyPage(index) {
       this.$refs.pagination.pageParam.pageIndex = index;
     },
     handleGoEdit(row) {
-      console.log("row", row);
+      this.$router.push({
+        name: "editArticle",
+        params: {
+          id: row.id
+        }
+      });
     },
     handleGoDetail(row) {
-      console.log("row", row);
+      this.$router.push({
+        name: "previewArticle",
+        params: {
+          id: row.id
+        }
+      });
     },
     showBatchSettingDialog() {
       this.showBatchSettingStatus = true;
@@ -297,21 +313,21 @@ export default {
     },
     handleUnPublish(row) {
       this.actionType = "unPublish";
-      this.jobId = row.id;
+      this.articleId = row.id;
       this.showPublishStatus = true;
     },
     handlePublish(row) {
       this.actionType = "publish";
-      this.jobId = row.id;
+      this.articleId = row.id;
       this.showPublishStatus = true;
     },
     async handleDelCourse(row) {
       try {
         this.loading = true;
         const params = {
-          id: row.id,
+          id: row.id
         };
-        const res = await recruitManage.delRecruit(params);
+        const res = await articleList.delArticle(params);
         if (res.code == 200) {
           this.$message.success("删除成功！");
           this.getArticleList();
@@ -334,10 +350,10 @@ export default {
       try {
         this.loading = true;
         const params = {
-          id: this.jobId,
-          state: this.actionType == "publish" ? 1 : 0,
+          id: this.articleId,
+          status: this.actionType == "publish" ? 1 : 0
         };
-        const res = await recruitManage.delRecruit(params);
+        const res = await articleList.updateArticleList(params);
         if (res.code == 200) {
           this.$message.success(
             `${this.actionType == "publish" ? "发布" : "下架"}职位成功！`
@@ -355,8 +371,8 @@ export default {
       } finally {
         this.loading = false;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -433,6 +449,10 @@ export default {
         height: 42px;
         object-fit: cover;
       }
+      .has-count {
+        color: #2080f0;
+        cursor: pointer;
+      }
       .published {
         display: flex;
         width: max-content;
@@ -456,6 +476,19 @@ export default {
         border: 1px solid rgba(252, 176, 64, 0.3);
         background: #fdf4e7;
         color: #fcb040;
+        font-size: 14px;
+        text-align: center;
+      }
+      .timely-publish {
+        display: flex;
+        width: max-content;
+        height: 28px;
+        padding: 0px 8px;
+        align-items: center;
+        border-radius: 2px;
+        border: 1px solid rgba(208, 48, 80, 0.3);
+        background: #fcf0f3;
+        color: #d03050;
         font-size: 14px;
         text-align: center;
       }
