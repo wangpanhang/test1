@@ -58,11 +58,31 @@
               <div class="column">
                 <div class="page-box">
                   <div class="title">客户评价</div>
-                  <div class="page-item">评价列表</div>
+                  <div
+                    :class="[
+                      'page-item',
+                      curSelectedRouteName == 'customerEvaluate'
+                        ? 'selected-page'
+                        : ''
+                    ]"
+                    @click="handleGoPage('customerEvaluate')"
+                  >
+                    评价列表
+                  </div>
                 </div>
                 <div class="page-box">
                   <div class="title">行业案例</div>
-                  <div class="page-item">案例列表</div>
+                  <div
+                    :class="[
+                      'page-item',
+                      curSelectedRouteName == 'industryCase'
+                        ? 'selected-page'
+                        : ''
+                    ]"
+                    @click="handleGoPage('industryCase')"
+                  >
+                    案例列表
+                  </div>
                 </div>
               </div>
               <div class="column">
@@ -142,7 +162,17 @@
               <div class="column">
                 <div class="page-box">
                   <div class="title">系统设置</div>
-                  <div class="page-item">操作日志</div>
+                  <div
+                    :class="[
+                      'page-item',
+                      curSelectedRouteName == 'operationLog'
+                        ? 'selected-page'
+                        : ''
+                    ]"
+                    @click="handleGoPage('operationLog')"
+                  >
+                    操作日志
+                  </div>
                 </div>
               </div>
             </div>
@@ -226,10 +256,10 @@ export default {
   },
   methods: {
     handleGoHome() {
-      this.$router.push("/home");
+      this.$router.replace("/home");
     },
     handleGoPage(name) {
-      this.$router.push({ name });
+      this.$router.replace({ name });
     }
   }
 };

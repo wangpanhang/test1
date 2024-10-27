@@ -37,6 +37,14 @@
         ></el-input>
       </div>
       <div class="upload-link-box">
+        <div class="text">排序值:</div>
+        <el-input
+          v-model="carouselRank"
+          placeholder="输入0~99排序值越大显示越靠前，默认为1"
+          style="width: 360px;"
+        ></el-input>
+      </div>
+      <div class="upload-link-box">
         <div class="text">是否显示:</div>
         <el-switch
           v-model="isShowStatus"
@@ -57,7 +65,7 @@
 </template>
 
 <script>
-import article from "@/api/upload.js";
+import upload from "@/api/upload.js";
 export default {
   props: {
     showCarouselSettingStatus: {
@@ -70,7 +78,8 @@ export default {
         return {
           linkVal: "",
           isShow: true,
-          uploadUrl: ""
+          uploadUrl: "",
+          carouselRank: ""
         };
       }
     },
@@ -84,16 +93,17 @@ export default {
       linkText: "",
       isShowStatus: true,
       fileList: [],
-      uploadUrl: ""
+      uploadUrl: "",
+      carouselRank: ""
     };
   },
   watch: {
     carouselActionObj: {
       handler(val) {
-        console.log("carouselActionObj", val);
         this.linkText = val.linkVal || "";
         this.isShowStatus = !!val.isShow;
         this.uploadUrl = val.uploadUrl || "";
+        this.carouselRank = val.carouselRank || "";
       },
       deep: true
     }
@@ -107,13 +117,15 @@ export default {
       const uploadImageObj = {
         uploadUrl: this.uploadUrl,
         linkText: this.linkText,
-        isShowStatus: this.isShowStatus
+        isShowStatus: this.isShowStatus,
+        carouselRank: this.carouselRank || 1
       };
       this.$emit("add:carousel", uploadImageObj);
-      this.uploadUrl = "";
+      this.closeDialog();
     },
     closeDialog() {
       this.uploadUrl = "";
+      this.linkText = "";
       this.$emit("update:showCarouselSettingStatus");
     },
     beforeUpload(file) {

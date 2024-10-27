@@ -123,9 +123,59 @@ export const constantRouterMap = [
         component: () => import('@/views/official/articleList/previewArticle'),
         meta: { title: '文章预览', hidden: true }
       },
+      {
+        path: 'articleComment',
+        name: 'articleComment',
+        component: () => import('@/views/official/articleList/articleComment'),
+        meta: { title: '文章列表', hidden: true }
+      },
+      {
+        path: 'customerEvaluate',
+        name: 'customerEvaluate',
+        component: () => import('@/views/official/customerEvaluate/index'),
+        meta: { title: '客户评价' }
+      },
+      {
+        path: 'industryCase',
+        name: 'industryCase',
+        component: () => import('@/views/official/industryCase/index'),
+        meta: { title: '行业案例' }
+      },
+      {
+        path: 'addIndustryCase',
+        name: 'addIndustryCase',
+        component: () => import('@/views/official/industryCase/addIndustryCase'),
+        meta: { title: '行业案例', hidden: true }
+      },
+      {
+        path: 'editIndustryCase',
+        name: 'editIndustryCase',
+        component: () => import('@/views/official/industryCase/editIndustryCase'),
+        meta: { title: '行业案例', hidden: true }
+      },
+      {
+        path: 'previewIndustryCase',
+        name: 'previewIndustryCase',
+        component: () => import('@/views/official/industryCase/previewIndustryCase'),
+        meta: { title: '行业案例', hidden: true }
+      },
     ]
   },
-
+  {
+    path: '/systemSetting',
+    component: Layout,
+    redirect: '/systemSetting/',
+    name: 'systemSetting',
+    meta: { title: '系统设置', icon: 'official' },
+    children: [
+      {
+        path: 'operationLog',
+        name: 'operationLog',
+        component: () => import('@/views/systemSetting/operationLog/index'),
+        meta: { title: '操作日志' }
+      },
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

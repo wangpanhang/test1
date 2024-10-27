@@ -66,7 +66,7 @@
                 </el-upload>
                 <el-input
                   style="margin-top: 8px;width: 200px;border-radius: 3px;"
-                  v-model="qrcode1Desc"
+                  v-model="qrcode1Remark"
                   size="medium"
                   placeholder="输入二维码描述"
                   maxlength="8"
@@ -91,7 +91,7 @@
                 </el-upload>
                 <el-input
                   style="margin-top: 8px;width: 200px;border-radius: 3px;"
-                  v-model="qrcode2Desc"
+                  v-model="qrcode2Remark"
                   size="medium"
                   placeholder="输入二维码描述"
                   maxlength="8"
@@ -116,7 +116,7 @@
                 </el-upload>
                 <el-input
                   style="margin-top: 8px;width: 200px;border-radius: 3px;"
-                  v-model="qrcode3Desc"
+                  v-model="qrcode3Remark"
                   size="medium"
                   placeholder="输入二维码描述"
                   maxlength="8"
@@ -147,7 +147,7 @@
 import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import contactUs from "@/api/official/contactUs.js";
-import article from "@/api/upload.js";
+import upload from "@/api/upload.js";
 
 export default {
   components: {
@@ -210,11 +210,11 @@ export default {
       submitStatus: false,
       fileList: [],
       qrcode1: "",
-      qrcode1Desc: "",
+      qrcode1Remark: "",
       qrcode2: "",
-      qrcode2Desc: "",
+      qrcode2Remark: "",
       qrcode3: "",
-      qrcode3Desc: ""
+      qrcode3Remark: ""
     };
   },
   methods: {
@@ -294,7 +294,10 @@ export default {
               ...this.jobObj,
               qrcode1: this.qrcode1,
               qrcode2: this.qrcode2,
-              qrcode3: this.qrcode3
+              qrcode3: this.qrcode3,
+              qrcode3Remark: this.qrcode3Remark,
+              qrcode2Remark: this.qrcode2Remark,
+              qrcode1Remark: this.qrcode1Remark
             };
             const res = await contactUs.setContactUs(params);
             if (res.code == 200) {

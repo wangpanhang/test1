@@ -49,4 +49,20 @@ export default {
       data: params
     })
   },
+  // 获取文章批量设置信息
+  getBatchConfig (params) {
+    return request({
+      url: `/back/api/article/config/get`,
+      method: 'post',
+      data: params
+    })
+  },
+  // 设置文章批量设置信息
+  setBatchConfig (params) {
+    return request({
+      url: `/back/api/article/config/set`,
+      method: 'post',
+      data: params
+    })
+  },
 }

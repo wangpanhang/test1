@@ -1,7 +1,7 @@
 <template>
   <div class="common-container">
     <div class="page-header">
-      <pageHeader title="文章预览" />
+      <pageHeader title="案例预览" />
       <div class="line"></div>
     </div>
     <div class="article-body">
@@ -29,10 +29,9 @@
             {{ articleObj.digest }}
           </div>
         </div>
-        <div
-          v-if="articleObj.contentHtml"
-          v-html="articleObj.contentHtml"
-        ></div>
+        <div v-if="articleObj.contentHtml" class="preview-content">
+          <div v-html="articleObj.contentHtml"></div>
+        </div>
       </div>
     </div>
     <div class="footer">
@@ -44,9 +43,9 @@
 
 <script>
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
-import articleList from "@/api/official/articleList";
+import industryCase from "@/api/official/industryCase";
 export default {
-  name: "previewArticle",
+  name: "previewIndustryCase",
   components: {
     pageHeader
   },
@@ -55,58 +54,53 @@ export default {
       articleObj: {
         title: "",
         tags: [],
-        source: "1",
-        categoryId: 1,
+        categoryId: 11,
         cover: "",
-        headImg: "",
+        headImage: "",
         contentHtml: "",
         digest: "",
-        publishTime: "",
-        viewCount: 0,
-        state: 0
+        customerLogo: "",
+        customerScale: ""
       },
-      articleId: ""
+      caseId: ""
     };
   },
   created() {
-    this.articleId = this.$route.params.id || "";
-    this.getArticleInfo();
+    this.caseId = this.$route.params.id || "";
+    this.getIndustryCaseInfo();
   },
   methods: {
-    async getArticleInfo() {
-      try {
-        const params = {
-          id: this.articleId
+    async getIndustryCaseInfo() {
+      const params = {
+        id: this.caseId
+      };
+      const res = await industryCase.getCaseInfo(params);
+      if (res.code == 200) {
+        this.$message.success("获取案例详情成功!");
+        const data = res.data;
+        this.articleObj = {
+          title: data.title,
+          tags: data.tags.split(",").filter(item => item),
+          categoryId: data.categoryId,
+          cover: data.cover,
+          headImage: data.headImage || "",
+          contentHtml: data.contentHtml,
+          digest: data.digest,
+          customerLogo: data.customerLogo,
+          customerScale: data.customerScale
         };
-        const res = await articleList.getArticleInfo(params);
-        if (res.code == 200) {
-          console.log("res", res);
-          this.$message.success("获取文章详情成功!");
-          const data = res.data;
-          this.articleObj = {
-            title: data.title || "",
-            digest: data.digest || "",
-            tags: data.tags.split(",").filter(item => item),
-            categoryId: data.categoryId || 1,
-            cover: data.cover || "",
-            contentHtml: data.contentHtml,
-            source: data.source || "",
-            publishTime: data.publishTime,
-            viewCount: data.viewCount || 0,
-            state: data.state
-          };
-        } else {
-          this.$message.error("获取文章详情失败!");
+      } else {
+        this.$message.success("获取案例详情失败!");
+        if (!this.caseId) {
+          this.$router.replace({ name: "industryCase" });
         }
-      } catch (_) {
-        this.$message.error("系统出错了，请稍后再试");
       }
     },
     goToEdit() {
       this.$router.push({
-        name: "editArticle",
+        name: "editIndustryCase",
         params: {
-          id: this.articleId
+          id: this.caseId
         }
       });
     }
@@ -138,6 +132,7 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: #f5f7ff;
     overflow: hidden;
     /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/
     ::-webkit-scrollbar {
@@ -159,15 +154,20 @@ export default {
       background-color: #b4b4b4;
     }
     .preview-container {
-      width: 800px;
+      width: 1200px;
       height: 100%;
       overflow-y: auto;
+      box-sizing: border-box;
+      padding: 12px 0;
       .preview-header-container {
         width: 100%;
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-bottom: 20px;
+        box-sizing: border-box;
+        padding: 40px;
+        background-color: #fff;
         .title {
           font-size: 32px;
           color: #303133;
@@ -231,6 +231,11 @@ export default {
           white-space: wrap;
           line-height: 22px;
         }
+      }
+      .preview-content {
+        box-sizing: border-box;
+        padding: 40px;
+        background-color: #fff;
       }
     }
   }

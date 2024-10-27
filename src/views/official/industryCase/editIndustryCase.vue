@@ -1,7 +1,7 @@
 <template>
   <div class="common-container">
     <div class="page-header">
-      <pageHeader title="新增文章" />
+      <pageHeader title="编辑案例" />
       <div class="line"></div>
     </div>
     <div class="article-body">
@@ -13,19 +13,19 @@
             label-position="top"
             ref="formRef"
           >
-            <el-form-item label="文章标题" prop="title">
+            <el-form-item label="案例标题" prop="title">
               <el-input
                 style="width: 360px;border-radius: 3px;"
                 v-model="articleObj.title"
                 size="medium"
-                placeholder="请输入文章标题"
+                placeholder="请输入案例标题"
                 maxlength="30"
                 show-word-limit
               ></el-input>
             </el-form-item>
             <el-form-item prop="tags">
               <div slot="label" class="label-box">
-                <span style="font-size: 14px;">文章标签</span>
+                <span style="font-size: 14px;">案例标签</span>
                 <span style="font-size: 14px;color:#9EA4AA;margin-left: 224px;"
                   >可添加3个</span
                 >
@@ -37,7 +37,7 @@
                 allow-create
                 default-first-option
                 style="width: 360px;border-radius: 3px;"
-                placeholder="请选择文章标签"
+                placeholder="请输入标签按回车键确认"
                 :multiple-limit="3"
               >
                 <el-option
@@ -49,7 +49,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="文章来源">
+            <!-- <el-form-item label="文章来源">
               <el-radio-group v-model="articleObj.source">
                 <el-radio label="1">原创</el-radio>
                 <el-radio label="2"
@@ -63,11 +63,11 @@
                   ></el-input
                 ></el-radio>
               </el-radio-group>
-            </el-form-item>
-            <el-form-item label="文章分类">
+            </el-form-item> -->
+            <el-form-item label="案例分类">
               <el-select
                 v-model="articleObj.categoryId"
-                placeholder="请选择文章分类"
+                placeholder="请选择案例分类"
                 style="width: 200px;border-radius: 3px;"
               >
                 <el-option
@@ -79,7 +79,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="文章封面">
+            <el-form-item label="案例封面" prop="cover">
               <div class="upload-cover-box">
                 <el-upload
                   class="upload-box"
@@ -97,12 +97,12 @@
                   ></div>
                 </el-upload>
                 <div class="upload-tips">
-                  <span>推荐使用的宽高为280px*210px或同比例小于1M的图片。</span>
+                  <span>推荐使用的宽高为375px*200px或同比例小于1M的图片。</span>
                   <span>支持JPG、PNG、JPEG格式。</span>
                 </div>
               </div>
             </el-form-item>
-            <!-- <el-form-item label="文章头图">
+            <el-form-item label="案例头图">
               <div class="upload-headImg-box">
                 <el-upload
                   class="upload-box"
@@ -112,11 +112,14 @@
                   :before-upload="beforeUpload"
                   :http-request="handleUpload2"
                 >
-                  <div class="upload-file-box" v-if="!articleObj.headImg"></div>
+                  <div
+                    class="upload-file-box"
+                    v-if="!articleObj.headImage"
+                  ></div>
                   <div
                     v-else
                     class="upload-image"
-                    :style="{ backgroundImage: `url(${articleObj.headImg})` }"
+                    :style="{ backgroundImage: `url(${articleObj.headImage})` }"
                   ></div>
                 </el-upload>
                 <div class="upload-tips">
@@ -127,14 +130,52 @@
                   <span>注：未上传默认使用列表页头图。</span>
                 </div>
               </div>
-            </el-form-item> -->
-            <el-form-item label="文章摘要" prop="digest">
+            </el-form-item>
+            <el-form-item label="案例客户logo" prop="cover">
+              <div class="upload-customer-logo-box">
+                <el-upload
+                  class="upload-box"
+                  action="action"
+                  :show-file-list="false"
+                  :file-list="fileList"
+                  :before-upload="beforeUpload"
+                  :http-request="handleUpload3"
+                >
+                  <div
+                    class="upload-file-box"
+                    v-if="!articleObj.customerLogo"
+                  ></div>
+                  <div
+                    v-else
+                    class="upload-image"
+                    :style="{
+                      backgroundImage: `url(${articleObj.customerLogo})`
+                    }"
+                  ></div>
+                </el-upload>
+                <div class="upload-tips">
+                  <span>推荐使用的宽高为1:1大小小于1M的图片。</span>
+                  <span>支持JPG、PNG、JPEG格式。</span>
+                </div>
+              </div>
+            </el-form-item>
+            <el-form-item label="客户规模" prop="customerScale">
+              <el-input
+                style="width: 360px;border-radius: 3px;"
+                v-model="articleObj.customerScale"
+                size="medium"
+                placeholder="如: 制造业/5,000人/广州"
+                maxlength="30"
+                show-word-limit
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="案例客户介绍" prop="digest">
               <div class="digest-box">
                 <el-input
                   style="width: 360px;border-radius: 3px;"
                   v-model="articleObj.digest"
                   size="medium"
-                  placeholder="请输入文章摘要"
+                  placeholder="请输入案例客户介绍"
                   :autosize="{ minRows: 5, maxRows: 8 }"
                   type="textarea"
                   maxlength="180"
@@ -146,19 +187,14 @@
         </div>
       </div>
       <div class="rich-text-box">
-        <RichText width="820" v-model="articleObj.contentHtml" />
+        <RichText width="1200" v-model="articleObj.contentHtml" />
       </div>
     </div>
     <div class="footer">
       <div class="common-btn cancel-btn" @click="$router.go(-1)">取消</div>
-      <div class="common-btn publish-btn" @click="timelyPublish">定时发布</div>
+      <!-- <div class="common-btn publish-btn" @click="timelyPublish">定时发布</div> -->
       <div class="common-btn save-btn" @click="savePublish">保存并发布</div>
     </div>
-    <PublishTimeDialog
-      :showPublishTimeStatus="showPublishTimeStatus"
-      @update:showPublishTimeStatus="showPublishTimeStatus = false"
-      @updatePublishTime="publishArticle"
-    />
   </div>
 </template>
 
@@ -166,30 +202,29 @@
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import upload from "@/api/upload.js";
 import RichText from "@/components/RichText/index.vue";
-import articleList from "@/api/official/articleList";
-import PublishTimeDialog from "./components/PublishTimeDialog.vue";
+import industryCase from "@/api/official/industryCase";
 export default {
-  name: "addArticle",
+  name: "editArticle",
   components: {
     pageHeader,
-    RichText,
-    PublishTimeDialog
+    RichText
   },
   data() {
     return {
       articleObj: {
         title: "",
         tags: [],
-        source: "1",
-        categoryId: 1,
+        categoryId: 11,
         cover: "",
-        headImg: "",
+        headImage: "",
         contentHtml: "",
-        digest: ""
+        digest: "",
+        customerLogo: "",
+        customerScale: ""
       },
       rules: {
         title: [
-          { required: true, message: "请输入文章标题", trigger: "blur" },
+          { required: true, message: "请输入案例标题", trigger: "blur" },
           {
             min: 1,
             max: 30,
@@ -202,6 +237,16 @@ export default {
             type: "array",
             required: true,
             message: "请输入至少一个标签"
+          }
+        ],
+        cover: [{ required: true, message: "请上传案例封面", trigger: "blur" }],
+        customerScale: [
+          { required: true, message: "请输入客户规模", trigger: "blur" },
+          {
+            min: 1,
+            max: 30,
+            message: "长度在 1 到 30 个字符",
+            trigger: "blur"
           }
         ],
         digest: [
@@ -218,24 +263,79 @@ export default {
       reprinted: "",
       typeList: [
         {
-          value: 1,
-          label: "公司新闻"
+          value: 11,
+          label: "服务器"
         },
         {
-          value: 2,
-          label: "行业动态"
+          value: 12,
+          label: "高端装备"
         },
         {
-          value: 3,
-          label: "技术方案"
+          value: 13,
+          label: "工业及传感"
+        },
+        {
+          value: 14,
+          label: "器件视觉"
+        },
+        {
+          value: 15,
+          label: "通信"
+        },
+        {
+          value: 16,
+          label: "医疗电子"
+        },
+        {
+          value: 17,
+          label: "汽车电子"
+        },
+        {
+          value: 18,
+          label: "计算机"
         }
       ],
       fileList: [],
-      showPublishTimeStatus: false,
-      submitStatus: false
+      submitStatus: false,
+      caseId: ""
     };
   },
+  created() {
+    this.caseId = this.$route.params.id;
+  },
+  mounted() {
+    this.init();
+  },
   methods: {
+    init() {
+      this.getIndustryCaseInfo();
+    },
+    async getIndustryCaseInfo() {
+      const params = {
+        id: this.caseId
+      };
+      const res = await industryCase.getCaseInfo(params);
+      if (res.code == 200) {
+        this.$message.success("获取案例详情成功!");
+        const data = res.data;
+        this.articleObj = {
+          title: data.title,
+          tags: data.tags.split(",").filter(item => item),
+          categoryId: data.categoryId,
+          cover: data.cover,
+          headImage: data.headImage || "",
+          contentHtml: data.contentHtml,
+          digest: data.digest,
+          customerLogo: data.customerLogo,
+          customerScale: data.customerScale
+        };
+      } else {
+        this.$message.success("获取案例详情失败!");
+        if (!this.caseId) {
+          this.$router.replace({ name: "industryCase" });
+        }
+      }
+    },
     beforeUpload(file) {
       const fileType = ["image/jpg", "image/png", "image/jpeg"];
       const isJPG = fileType.includes(file.type);
@@ -246,7 +346,7 @@ export default {
         return false;
       }
       if (!isLt1M) {
-        this.$message.error("上传二维码图片大小不能超过 1MB!");
+        this.$message.error("上传图片大小不能超过 1MB!");
         this.fileList = [];
         return false;
       }
@@ -268,28 +368,22 @@ export default {
       formData.append("image", file.file);
       const res = await upload.uploadImg(formData);
       if (res.code == 200) {
-        this.articleObj.headImg = res.data.fileName;
+        this.articleObj.headImage = res.data.fileName;
         this.$message.success("上传图片成功");
       } else {
         this.$message.error("上传图片失败");
       }
     },
-    timelyPublish() {
-      this.$refs.formRef.validate(async valid => {
-        if (valid) {
-          if (this.articleObj.source == "2") {
-            if (this.reprinted === "" || !this.reprinted) {
-              this.$message.warning("请输入文章来源");
-              return;
-            }
-          }
-          if (this.articleObj.contentHtml === "") {
-            this.$message.warning("请输入文章内容");
-            return;
-          }
-          this.showPublishTimeStatus = true;
-        }
-      });
+    async handleUpload3(file) {
+      let formData = new FormData();
+      formData.append("image", file.file);
+      const res = await upload.uploadImg(formData);
+      if (res.code == 200) {
+        this.articleObj.customerLogo = res.data.fileName;
+        this.$message.success("上传图片成功");
+      } else {
+        this.$message.error("上传图片失败");
+      }
     },
     savePublish() {
       if (this.submitStatus) {
@@ -299,12 +393,6 @@ export default {
       this.submitStatus = true;
       this.$refs.formRef.validate(async valid => {
         if (valid) {
-          if (this.articleObj.source == "2") {
-            if (this.reprinted === "" || !this.reprinted) {
-              this.$message.warning("请输入文章来源");
-              return;
-            }
-          }
           this.publishArticle();
         } else {
           this.submitStatus = false;
@@ -319,22 +407,24 @@ export default {
           contentHtml: this.articleObj.contentHtml,
           cover: this.articleObj.cover,
           title: this.articleObj.title,
-          source: this.articleObj.source == 1 ? "原创" : this.reprinted,
+          headImage: this.articleObj.headImage,
           digest: this.articleObj.digest,
           tags: this.articleObj.tags.join(","),
-          publishTime: time ? time : ""
+          customerLogo: this.articleObj.customerLogo,
+          customerScale: this.articleObj.customerScale,
+          id: this.caseId
         };
-        const res = await articleList.addArticle(params);
+        const res = await industryCase.editCase(params);
         if (res.code == 200) {
-          this.$message.success("文章发布成功!");
+          this.$message.success("案例发布成功!");
           this.$router.replace({
-            name: "articleList"
+            name: "industryCase"
           });
         } else {
-          this.$message.error("文章发布失败!");
+          this.$message.error("案例发布失败!");
         }
       } catch (_) {
-        this.$message.error("文章发布失败!");
+        this.$message.error("案例发布失败!");
       } finally {
         this.submitStatus = false;
       }
@@ -492,6 +582,46 @@ export default {
           }
           .upload-tips {
             width: 208px;
+            margin-left: 12px;
+            font-size: 12px;
+            color: #9ea4aa;
+            span {
+              display: block;
+              line-height: 20px;
+            }
+          }
+        }
+        .upload-customer-logo-box {
+          width: 100%;
+          display: flex;
+          .upload-box {
+            width: 80px;
+            height: 80px;
+            /deep/ .el-upload-dragger {
+              width: 80px;
+              height: 80px;
+            }
+            .upload-file-box {
+              width: 80px;
+              height: 80px;
+              background-image: url("../../../assets/img/upload-logo.png");
+              background-size: 100% 100%;
+              background-repeat: no-repeat;
+              cursor: pointer;
+              &:hover {
+                border: 1px solid;
+              }
+            }
+            .upload-image {
+              width: 80px;
+              height: 80px;
+              background-size: 100% 100%;
+              background-repeat: no-repeat;
+              background-position: center;
+            }
+          }
+          .upload-tips {
+            width: 268px;
             margin-left: 12px;
             font-size: 12px;
             color: #9ea4aa;

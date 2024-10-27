@@ -127,25 +127,14 @@ export default {
   },
   data() {
     return {
-      tableData: [
-        // {
-        //   id: 1,
-        //   carouselUrl:
-        //     "https://wallpaperm.cmcm.com/4700eaf249b71d56d95aff8ca94313fa.jpg",
-        //   redirectUrl: "https://www.baidu.com",
-        //   gmtCreate: "2024-10-21 15:29:35",
-        //   creator: "小王",
-        //   gmtModified: "2024-10-21 15:29:35",
-        //   editor: "小王",
-        //   isShow: true
-        // }
-      ],
+      tableData: [],
       showCarouselSettingStatus: false,
       showCarouselConfigStatus: false,
       carouselActionObj: {
         linkVal: "",
         isShow: true,
-        uploadUrl: ""
+        uploadUrl: "",
+        carouselRank: ""
       },
       loading: false,
       actionType: "",
@@ -208,7 +197,7 @@ export default {
         let res = null;
         if (this.actionType == "add") {
           const params = {
-            carouselRank: this.tableData.length + 1,
+            carouselRank: uploadObj.carouselRank,
             carouselUrl: uploadObj.uploadUrl || "",
             isShow: uploadObj.isShowStatus ? 1 : 0,
             redirectUrl: uploadObj.linkText || ""
@@ -217,7 +206,7 @@ export default {
         } else {
           const params = {
             id: this.carouselId,
-            carouselRank: this.tableData.length + 1,
+            carouselRank: uploadObj.carouselRank,
             carouselUrl: uploadObj.uploadUrl || "",
             isShow: uploadObj.isShowStatus ? 1 : 0,
             redirectUrl: uploadObj.linkText || ""
@@ -232,7 +221,6 @@ export default {
           this.getCarouselList();
         }
       } catch (_) {
-        this.$message.error("轮播图更新失败，请重试");
       } finally {
         this.loading = false;
       }
@@ -241,7 +229,8 @@ export default {
       this.carouselActionObj = {
         linkVal: row.redirectUrl,
         isShow: row.isShow,
-        uploadUrl: row.carouselUrl
+        uploadUrl: row.carouselUrl,
+        carouselRank: row.carouselRank
       };
       this.carouselId = row.id;
       this.actionType = "edit";
@@ -251,7 +240,7 @@ export default {
       const curSwitchShow = !row.isShow;
       if (curSwitchShow) {
         let showLen = this.tableData.filter(item => item.isShow);
-        if (showLen >= 5) {
+        if (showLen.length >= 5) {
           this.$message.warning(
             "最多支持同时显示5张轮播图，请先关闭其它轮播图在进行开启。"
           );
@@ -259,6 +248,33 @@ export default {
         }
       }
       row.isShow = curSwitchShow;
+      this.updateCarousel(row);
+    },
+    async updateCarousel(row) {
+      try {
+        this.loading = true;
+        const params = {
+          id: row.id,
+          carouselRank: row.carouselRank,
+          carouselUrl: row.carouselUrl || "",
+          isShow: row.isShow ? 1 : 0,
+          redirectUrl: row.redirectUrl || ""
+        };
+        const res = await carousel.editCarousel(params);
+        if (res.code == 200) {
+          this.$message.success("编辑轮播图成功");
+          // 重新刷新列表
+          this.getCarouselList();
+        } else {
+          this.$message.success("轮播图设置失败");
+          row.isShow = !row.isShow;
+        }
+      } catch (_) {
+        this.$message.error("轮播图设置失败，请重试!");
+        row.isShow = !row.isShow;
+      } finally {
+        this.loading = false;
+      }
     },
     async handleDelCarousel(row) {
       try {

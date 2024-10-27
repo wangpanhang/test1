@@ -13,7 +13,7 @@
       <div class="row">
         <div class="label">允许评论:</div>
         <el-switch
-          v-model="batchSettingInfo.allowComment"
+          v-model="batchSettingInfo.commentAllow"
           active-color="#18A058"
           inactive-color="#EDEDED"
         >
@@ -25,7 +25,7 @@
       <div class="row">
         <div class="label">显示评论:</div>
         <el-switch
-          v-model="batchSettingInfo.showComment"
+          v-model="batchSettingInfo.commentShow"
           active-color="#18A058"
           inactive-color="#EDEDED"
         >
@@ -36,11 +36,15 @@
       </div>
       <div class="row" style="align-items: flex-start">
         <div class="label">数据显示:</div>
-        <el-checkbox-group v-model="batchSettingInfo.checkList">
-          <el-checkbox label="showCount">显示文章数量</el-checkbox>
-          <el-checkbox label="showView">显示浏览量</el-checkbox>
-          <el-checkbox label="showGood">显示点赞数量</el-checkbox>
-        </el-checkbox-group>
+        <el-checkbox v-model="batchSettingInfo.commentNumber"
+          >显示评论数量</el-checkbox
+        >
+        <el-checkbox v-model="batchSettingInfo.viewNumber"
+          >显示浏览量</el-checkbox
+        >
+        <el-checkbox v-model="batchSettingInfo.likeNumber"
+          >显示点赞数量</el-checkbox
+        >
       </div>
     </div>
     <div class="popClass-bottom">
@@ -57,20 +61,22 @@ export default {
   props: {
     showBatchSettingStatus: {
       type: Boolean,
-      default: false,
+      default: false
     },
     batchSettingObj: {
       type: Object,
       default: {
-        allowComment: true,
-        showComment: true,
-        checkList: [],
-      },
-    },
+        commentAllow: true,
+        commentShow: true,
+        likeNumber: false,
+        viewNumber: false,
+        commentNumber: false
+      }
+    }
   },
   data() {
     return {
-      batchSettingInfo: this.batchSettingObj,
+      batchSettingInfo: this.batchSettingObj
     };
   },
   watch: {
@@ -78,8 +84,8 @@ export default {
       handler(val) {
         this.batchSettingInfo = val;
       },
-      deep: true,
-    },
+      deep: true
+    }
   },
   methods: {
     updateBatchSetting() {
@@ -88,8 +94,8 @@ export default {
     },
     closeDialog() {
       this.$emit("update:showBatchSettingStatus");
-    },
-  },
+    }
+  }
 };
 </script>
 

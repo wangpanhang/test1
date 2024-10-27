@@ -1,6 +1,6 @@
 <template>
   <div class="honor-qualification-container">
-    <pageHeader title="文章列表" />
+    <pageHeader title="行业案例" />
     <div class="form-box">
       <div class="filter-box">
         <el-input
@@ -8,15 +8,15 @@
           style="width: 200px"
           size="small"
           suffix-icon="el-icon-search"
-          placeholder="输入文章标题查找"
+          placeholder="输入案例标题查找"
           clearable
           @change="handleSearch"
         ></el-input>
         <div class="filter-item">
-          <div class="label">文章类型：</div>
+          <div class="label">案例类型：</div>
           <el-select
             v-model="filterObj.categoryId"
-            placeholder="请选择文章类型"
+            placeholder="请选择案例类型"
             style="width: 160px"
             size="small"
             @change="handleSearch"
@@ -31,10 +31,10 @@
           </el-select>
         </div>
         <div class="filter-item">
-          <div class="label">文章状态：</div>
+          <div class="label">案例状态：</div>
           <el-select
             v-model="filterObj.state"
-            placeholder="请选择文章状态"
+            placeholder="请选择案例状态"
             style="width: 160px"
             size="small"
             @change="handleSearch"
@@ -51,10 +51,7 @@
       </div>
       <div class="common-btn-box">
         <div class="common-btn add-btn" @click="goAddArticle">
-          新增文章
-        </div>
-        <div class="common-btn line-btn" @click="showBatchSettingDialog">
-          批量设置
+          新增案例
         </div>
       </div>
     </div>
@@ -73,7 +70,7 @@
         >
           <el-table-column type="index" label="序号" width="56px">
           </el-table-column>
-          <el-table-column prop="cover" label="文章封面" width="120px">
+          <el-table-column prop="cover" label="案例封面" width="120px">
             <template slot-scope="scope">
               <div class="img">
                 <img :src="scope.row.cover" class="img" />
@@ -83,17 +80,34 @@
           </el-table-column>
           <el-table-column
             prop="title"
-            width="444px"
+            width="408px"
             :show-overflow-tooltip="true"
-            label="文章标题"
+            label="案例名称"
           >
           </el-table-column>
-          <el-table-column prop="categoryName" label="文章类型" width="120px">
+          <el-table-column prop="categoryName" label="案例分类" width="200px">
             <template slot-scope="scope">
-              {{ typeList[scope.row.categoryId].label }}
+              {{ typeTextObj[scope.row.categoryId] }}
             </template>
           </el-table-column>
-          <el-table-column prop="categoryId" label="文章状态" width="120px">
+          <el-table-column prop="tags" label="案例标签" width="296px">
+            <template slot-scope="scope">
+              <div
+                v-if="scope.row.tags && scope.row.tags.length > 0"
+                class="tag-box"
+              >
+                <div
+                  class="tag-item"
+                  v-for="(item, index) of scope.row.tags"
+                  :key="index"
+                >
+                  {{ item }}
+                </div>
+              </div>
+              <div v-else>--</div>
+            </template>
+          </el-table-column>
+          <el-table-column prop="categoryId" label="案例状态" width="120px">
             <template slot-scope="scope">
               <div v-if="scope.row.state == 1" class="published">
                 已发布
@@ -104,19 +118,7 @@
               <div v-if="scope.row.state == 3" class="timely-publish"></div>
             </template>
           </el-table-column>
-          <el-table-column prop="viewCount" label="浏览量" width="120px">
-          </el-table-column>
-          <el-table-column prop="goodCount" label="点赞数" width="120px">
-          </el-table-column>
-          <el-table-column prop="commentCount" label="评论数" width="120px">
-            <template slot-scope="scope">
-              <div class="no-count" v-if="!scope.row.commentCount">0</div>
-              <div class="has-count" v-else @click="goCommentPage(scope.row)">
-                {{ scope.row.commentCount }}
-              </div>
-            </template>
-          </el-table-column>
-          <el-table-column prop="publishTime" label="创建时间" width="180px">
+          <el-table-column prop="createTime" label="创建时间" width="200px">
           </el-table-column>
           <el-table-column
             prop="action"
@@ -182,12 +184,6 @@
       @update:showPublishStatus="showPublishStatus = false"
       @handlePublishArticle="handlePublishArticle"
     />
-    <BatchSettingDialog
-      :showBatchSettingStatus="showBatchSettingStatus"
-      :batchSettingObj="batchSettingObj"
-      @update:showBatchSettingStatus="showBatchSettingStatus = false"
-      @updateBatchSetting="updateBatchSetting"
-    />
   </div>
 </template>
 
@@ -196,17 +192,16 @@ import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import Pagination from "@/components/Pagination";
 import articleList from "@/api/official/articleList";
+import industryCase from "@/api/official/industryCase";
 import PublishDialog from "./components/PublishDialog.vue";
-import BatchSettingDialog from "./components/BatchSettingDialog.vue";
 
 export default {
   components: {
     pageHeader,
     Pagination,
-    PublishDialog,
-    BatchSettingDialog
+    PublishDialog
   },
-  name: "articleList",
+  name: "industryCase",
   computed: {
     ...mapGetters(["name", "roles"])
   },
@@ -229,16 +224,36 @@ export default {
           label: "全部类型"
         },
         {
-          value: 1,
-          label: "公司新闻"
+          value: "11",
+          label: "服务器"
         },
         {
-          value: 2,
-          label: "行业动态"
+          value: "12",
+          label: "高端装备"
         },
         {
-          value: 3,
-          label: "技术方案"
+          value: "13",
+          label: "工业及传感"
+        },
+        {
+          value: "14",
+          label: "器件视觉"
+        },
+        {
+          value: "15",
+          label: "通信"
+        },
+        {
+          value: "16",
+          label: "医疗电子"
+        },
+        {
+          value: "17",
+          label: "汽车电子"
+        },
+        {
+          value: "18",
+          label: "计算机"
         }
       ],
       stateList: [
@@ -265,48 +280,55 @@ export default {
         viewNumber: false,
         commentNumber: false
       },
-      articleId: ""
+      typeTextObj: {
+        11: "服务器",
+        12: "高端装备",
+        13: "工业及传感",
+        14: "器件视觉",
+        15: "通信",
+        16: "医疗电子",
+        17: "汽车电子",
+        18: "计算机"
+      },
+      caseId: ""
     };
   },
   methods: {
     init() {
       // 获取文章列表
-      this.getArticleList();
-      // 获取文章批量设置信息
-      this.getBatchConfig();
+      this.getCaseList();
     },
-    async getArticleList() {
+    async getCaseList() {
       let params = {
         pageIndex: this.$refs.pagination.pageParam.pageIndex,
         pageSize: this.$refs.pagination.pageParam.pageSize,
         ...this.filterObj
       };
-      const res = await articleList.getArticleList(params);
+      const res = await industryCase.getCaseList(params);
       if (res.code == 200) {
-        this.tableData = res.data.list;
+        this.tableData = res.data.list.map(item => {
+          return {
+            ...item,
+            tags: item.tags.split(",").filter(item => item)
+          };
+        });
         // 赋值对应页码等数据
         this.$refs.pagination.pageParam.totalCount = res.data.total;
       }
     },
-    async getBatchConfig() {
-      const res = await articleList.getBatchConfig({});
-      if (res.code == 200) {
-        this.batchSettingObj = res.data;
-      }
-    },
     handleSearch() {
       this.modifyPage(1);
-      this.getArticleList();
+      this.getCaseList();
     },
     goAddArticle() {
-      this.$router.push({ name: "addArticle" });
+      this.$router.push({ name: "addIndustryCase" });
     },
     modifyPage(index) {
       this.$refs.pagination.pageParam.pageIndex = index;
     },
     handleGoEdit(row) {
       this.$router.push({
-        name: "editArticle",
+        name: "editIndustryCase",
         params: {
           id: row.id
         }
@@ -314,40 +336,20 @@ export default {
     },
     handleGoDetail(row) {
       this.$router.push({
-        name: "previewArticle",
+        name: "previewIndustryCase",
         params: {
           id: row.id
         }
       });
-    },
-    goCommentPage(row) {
-      this.$router.push({
-        name: "articleComment",
-        params: {
-          id: row.id
-        }
-      });
-    },
-    showBatchSettingDialog() {
-      this.showBatchSettingStatus = true;
-    },
-    async updateBatchSetting(obj) {
-      this.batchSettingObj = obj;
-      const res = await articleList.setBatchConfig(obj);
-      if (res.code == 200) {
-        this.$message.success("设置成功!");
-      } else {
-        this.$message.error("设置失败,请重试!");
-      }
     },
     handleUnPublish(row) {
       this.actionType = "unPublish";
-      this.articleId = row.id;
+      this.caseId = row.id;
       this.showPublishStatus = true;
     },
     handlePublish(row) {
       this.actionType = "publish";
-      this.articleId = row.id;
+      this.caseId = row.id;
       this.showPublishStatus = true;
     },
     async handleDelCourse(row) {
@@ -359,7 +361,7 @@ export default {
         const res = await articleList.delArticle(params);
         if (res.code == 200) {
           this.$message.success("删除成功！");
-          this.getArticleList();
+          this.getCaseList();
         } else {
           this.$message.error("删除失败！");
         }
@@ -370,32 +372,32 @@ export default {
       }
     },
     handleSizeChange() {
-      this.getArticleList();
+      this.getCaseList();
     },
     handleCurrentChange() {
-      this.getArticleList();
+      this.getCaseList();
     },
     async handlePublishArticle() {
       try {
         this.loading = true;
         const params = {
-          id: this.articleId,
+          id: this.caseId,
           status: this.actionType == "publish" ? 1 : 0
         };
         const res = await articleList.updateArticleList(params);
         if (res.code == 200) {
           this.$message.success(
-            `${this.actionType == "publish" ? "发布" : "下架"}文章成功！`
+            `${this.actionType == "publish" ? "发布" : "下架"}案例成功！`
           );
-          this.getArticleList();
+          this.getCaseList();
         } else {
           this.$message.error(
-            `${this.actionType == "publish" ? "发布" : "下架"}文章失败！`
+            `${this.actionType == "publish" ? "发布" : "下架"}案例失败！`
           );
         }
       } catch (_) {
         this.$message.error(
-          `${this.actionType == "publish" ? "发布" : "下架"}文章失败！`
+          `${this.actionType == "publish" ? "发布" : "下架"}案例失败！`
         );
       } finally {
         this.loading = false;
@@ -477,6 +479,21 @@ export default {
         width: 56px;
         height: 42px;
         object-fit: cover;
+      }
+      .tag-box {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        .tag-item {
+          box-sizing: border-box;
+          padding: 2px 8px;
+          width: max-content;
+          border-radius: 2px;
+          border: 1px solid #e0e0e6;
+          background: #fafafc;
+          font-size: 14px;
+          color: #333639;
+        }
       }
       .has-count {
         color: #2080f0;

@@ -5,7 +5,7 @@
     <div class="container">
       <sidebar />
       <div class="main-container">
-        <div class="breadcrumb-box">
+        <div class="breadcrumb-box" v-if="$route.path !== '/home'">
           <div class="breadcrumb-icon"></div>
           <div class="breadcrumb-text">
             <span

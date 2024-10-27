@@ -110,7 +110,7 @@
                   v-model="articleObj.digest"
                   size="medium"
                   placeholder="请输入文章摘要"
-                  rows="5"
+                  :autosize="{ minRows: 5, maxRows: 8 }"
                   type="textarea"
                   maxlength="180"
                   show-word-limit
@@ -139,7 +139,7 @@
 
 <script>
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
-import article from "@/api/upload.js";
+import upload from "@/api/upload.js";
 import RichText from "@/components/RichText/index.vue";
 import articleList from "@/api/official/articleList";
 import PublishTimeDialog from "./components/PublishTimeDialog.vue";
@@ -253,13 +253,14 @@ export default {
         return false;
       }
       if (!isLt1M) {
-        this.$message.error("上传二维码图片大小不能超过 1MB!");
+        this.$message.error("上传图片大小不能超过 1MB!");
         this.fileList = [];
         return false;
       }
       return true;
     },
     async handleUpload1(file) {
+      console.log("hahahah", file);
       let formData = new FormData();
       formData.append("image", file.file);
       const res = await upload.uploadImg(formData);
