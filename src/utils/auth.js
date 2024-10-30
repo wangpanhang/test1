@@ -2,21 +2,21 @@ import Cookies from 'js-cookie'
 
 const TokenKey = 'token'
 
-export function getToken() {
+export function getToken () {
   // return document.cookie || ''
   return Cookies.get(TokenKey)
 }
 
-export function setToken(token) {
+export function setToken (token) {
   return Cookies.set(TokenKey, token)
 }
 
-export function removeToken() {
+export function removeToken () {
   return Cookies.remove(TokenKey)
 }
 
-export function isAuth(permission) {
-  let permissions = localStorage.getItem("permissions");
+export function isAuth (permission) {
+  let permissions = localStorage.getItem("permissions")
   let flag = false
 
   if (!permissions) {
@@ -26,8 +26,8 @@ export function isAuth(permission) {
   for (let one of permission) {
     if (permissions.includes(one)) {
       flag = true
-      break;
+      break
     }
   }
-  return flag;
+  return flag
 }

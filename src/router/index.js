@@ -82,7 +82,7 @@ export const constantRouterMap = [
         meta: { title: '招聘管理', hidden: true }
       },
       {
-        path: 'editRecruitJob',
+        path: 'editRecruitJob/:id',
         name: 'editRecruitJob',
         component: () => import('@/views/official/recruitManage/editRecruitJob'),
         meta: { title: '招聘管理', hidden: true }
@@ -112,19 +112,19 @@ export const constantRouterMap = [
         meta: { title: '新增文章', hidden: true }
       },
       {
-        path: 'editArticle',
+        path: 'editArticle/:id',
         name: 'editArticle',
         component: () => import('@/views/official/articleList/editArticle'),
         meta: { title: '编辑文章', hidden: true }
       },
       {
-        path: 'previewArticle',
+        path: 'previewArticle/:id',
         name: 'previewArticle',
         component: () => import('@/views/official/articleList/previewArticle'),
         meta: { title: '文章预览', hidden: true }
       },
       {
-        path: 'articleComment',
+        path: 'articleComment/:id',
         name: 'articleComment',
         component: () => import('@/views/official/articleList/articleComment'),
         meta: { title: '文章列表', hidden: true }
@@ -148,13 +148,13 @@ export const constantRouterMap = [
         meta: { title: '行业案例', hidden: true }
       },
       {
-        path: 'editIndustryCase',
+        path: 'editIndustryCase/:id',
         name: 'editIndustryCase',
         component: () => import('@/views/official/industryCase/editIndustryCase'),
         meta: { title: '行业案例', hidden: true }
       },
       {
-        path: 'previewIndustryCase',
+        path: 'previewIndustryCase/:id',
         name: 'previewIndustryCase',
         component: () => import('@/views/official/industryCase/previewIndustryCase'),
         meta: { title: '行业案例', hidden: true }
@@ -173,6 +173,12 @@ export const constantRouterMap = [
         name: 'operationLog',
         component: () => import('@/views/systemSetting/operationLog/index'),
         meta: { title: '操作日志' }
+      },
+      {
+        path: 'roleManage',
+        name: 'roleManage',
+        component: () => import('@/views/systemSetting/roleManage/index'),
+        meta: { title: '角色管理' }
       },
     ]
   },

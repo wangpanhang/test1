@@ -143,19 +143,28 @@
                   </div>
                 </div>
               </div>
-              <div class="column">
+              <!-- <div class="column">
                 <div class="page-box">
                   <div class="title">其它设置</div>
                   <div class="page-item">悬浮信息</div>
-                  <div class="page-item">招聘管理</div>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="popover-box" v-else-if="item.key == '/setting'">
               <div class="column">
                 <div class="page-box">
                   <div class="title">人员管理</div>
-                  <div class="page-item">角色管理</div>
+                  <div
+                    :class="[
+                      'page-item',
+                      curSelectedRouteName == 'roleManage'
+                        ? 'selected-page'
+                        : ''
+                    ]"
+                    @click="handleGoPage('roleManage')"
+                  >
+                    角色管理
+                  </div>
                   <div class="page-item">员工管理</div>
                 </div>
               </div>

@@ -1,19 +1,19 @@
 <template>
   <div class="honor-qualification-container">
-    <pageHeader title="客户评价" />
+    <pageHeader title="角色管理" />
     <div class="form-box">
       <el-input
-        v-model="customName"
+        v-model="roleName"
         style="width: 200px"
         size="small"
         suffix-icon="el-icon-search"
-        placeholder="输入客户名称查找"
+        placeholder="输入角色名称查找"
         clearable
         @change="handleSearch"
       ></el-input>
       <div class="common-btn-box">
         <div class="common-btn add-btn" @click="showCustomerDialog">
-          新增客户评价
+          新建角色
         </div>
       </div>
     </div>
@@ -30,55 +30,44 @@
           element-loading-background="rgba(0, 0, 0, 0.8)"
           :header-cell-style="{ backgroundColor: '#F2F3F5' }"
         >
-          <el-table-column type="index" label="序号" width="56px">
+          <el-table-column type="index" label="序号" width="80px">
           </el-table-column>
-          <el-table-column prop="avatar" label="客户头像" width="120px">
-            <template slot-scope="scope">
-              <div class="img">
-                <img :src="scope.row.avatar" class="img" />
-              </div>
-              <!--  -->
-            </template>
+          <el-table-column prop="roleName" width="313px" label="角色名称">
           </el-table-column>
-          <el-table-column prop="name" width="160px" label="客户名称">
+          <el-table-column prop="roleId" label="角色编号" width="313px">
           </el-table-column>
-          <el-table-column prop="company" label="公司与职位" width="240px">
+          <el-table-column prop="status" label="角色状态" width="313px">
           </el-table-column>
-          <el-table-column
-            prop="content"
-            label="评价内容"
-            :show-overflow-tooltip="true"
-            width="700px"
-          ></el-table-column>
-          <el-table-column prop="gmtCreate" label="创建时间" width="180px">
+          <el-table-column prop="gmtCreate" label="创建时间" width="313px">
           </el-table-column>
           <el-table-column
             prop="action"
             label="操作"
-            width="160px"
+            width="313px"
             fixed="right"
           >
             <template slot-scope="scope">
               <div class="action-box">
-                <span
-                  class="common-action edit-action"
-                  @click="handleGoEdit(scope.row)"
-                  >编辑</span
+                <el-button type="text">编辑</el-button>
+                <el-button type="text">授权</el-button>
+                <el-button
+                  type="text"
+                  style="color: #FCB040;"
+                  @click="showActionComponent('unPublish')"
+                  >停用</el-button
                 >
-                <el-popconfirm
-                  confirm-button-text="确定"
-                  cancel-button-text="取消"
-                  cancel-button-type="none"
-                  confirm-button-type="danger"
-                  icon="el-icon-info"
-                  icon-color="red"
-                  title="删除后不可恢复，确定删除该评价吗？"
-                  @confirm="handleDelCourse(scope.row)"
+                <el-button
+                  type="text"
+                  style="color: #18A058;"
+                  @click="showActionComponent('publish')"
+                  >启用</el-button
                 >
-                  <span class="common-action del-action" slot="reference"
-                    >删除</span
-                  >
-                </el-popconfirm>
+                <el-button
+                  type="text"
+                  style="color: #D03050;"
+                  @click="showActionComponent('delete')"
+                  >删除</el-button
+                >
               </div>
             </template>
           </el-table-column>
@@ -92,11 +81,10 @@
         />
       </div>
     </div>
-    <CustomerEvaluateDialog
-      v-model="showCustomerStatus"
+    <ActionComponent
+      v-model="showPublishStatus"
       :type="actionType"
-      :customerEvaluateObj="customerEvaluateObj"
-      @updateCustomerEvaluate="updateCustomerEvaluate"
+      @updateRoleAction="updateRoleAction"
     />
   </div>
 </template>
@@ -105,16 +93,16 @@
 import { mapGetters } from "vuex";
 import pageHeader from "@/components/pageHeader/pageHeader.vue";
 import Pagination from "@/components/Pagination";
-import customerEvaluate from "@/api/official/customerEvaluate";
-import CustomerEvaluateDialog from "./components/CustomerEvaluateDialog.vue";
+import roleManage from "@/api/systemSetting/roleManage";
+import ActionComponent from "./components/ActionComponent.vue";
 
 export default {
   components: {
     pageHeader,
     Pagination,
-    CustomerEvaluateDialog
+    ActionComponent
   },
-  name: "customerEvaluate",
+  name: "roleManage",
   computed: {
     ...mapGetters(["name", "roles"])
   },
@@ -125,30 +113,25 @@ export default {
     return {
       tableData: [],
       loading: false,
-      certificateVal: 0,
-      customName: "",
+      roleName: "",
       actionType: "",
-      showCustomerStatus: false,
-      customerEvaluateId: "",
-      customerEvaluateObj: {
-        name: "",
-        avatar: "",
-        content: "",
-        company: ""
-      }
+      showUpdateRoleStatus: false,
+      showPublishStatus: false,
+      roleId: "",
+      selectedName: ""
     };
   },
   methods: {
     init() {
-      this.getCustomerEvaluateList();
+      this.getRoleList();
     },
-    async getCustomerEvaluateList() {
+    async getRoleList() {
       const params = {
         pageIndex: this.$refs.pagination.pageParam.pageIndex,
         pageSize: this.$refs.pagination.pageParam.pageSize,
-        name: this.customName || ""
+        roleName: this.roleName || ""
       };
-      const res = await customerEvaluate.getCustomerEvaluateList(params);
+      const res = await roleManage.getRoleList(params);
       if (res.code == 200) {
         this.tableData = res.data.list;
         // 赋值对应页码等数据
@@ -157,32 +140,26 @@ export default {
     },
     handleSearch() {
       this.modifyPage(1);
-      this.getCustomerEvaluateList();
+      this.getRoleList();
     },
     modifyPage(index) {
       this.$refs.pagination.pageParam.pageIndex = index;
     },
     showCustomerDialog() {
       this.actionType = "add";
-      this.customerEvaluateObj = {};
-      this.showCustomerStatus = true;
+      this.showUpdateRoleStatus = true;
     },
     handleGoEdit(row) {
       this.actionType = "edit";
-      this.customerEvaluateId = row.id;
-      this.customerEvaluateObj = {
-        name: row.name || "",
-        avatar: row.avatar || "",
-        content: row.content || "",
-        company: row.company || ""
-      };
-      this.showCustomerStatus = true;
+      this.roleId = row.id;
+      this.selectedName = row.roleName;
+      this.showUpdateRoleStatus = true;
     },
     async updateCustomerEvaluate(obj) {
       const params = { ...obj };
       let res = null;
       if (this.actionType == "edit") {
-        params["id"] = this.customerEvaluateId;
+        params["id"] = this.roleId;
         res = await customerEvaluate.updateCustomerEvaluate(params);
       } else {
         res = await customerEvaluate.addCustomerEvaluate(params);
@@ -191,37 +168,23 @@ export default {
         this.$message.success(
           `${this.actionType == "add" ? "新增" : "编辑"}评价成功`
         );
-        this.getCustomerEvaluateList();
+        this.getRoleList();
       } else {
         this.$message.error(
           `${this.actionType == "add" ? "新增" : "编辑"}评价失败`
         );
       }
     },
-    async handleDelCourse(row) {
-      try {
-        this.loading = true;
-        const params = {
-          id: row.id
-        };
-        const res = await customerEvaluate.delCustomerEvaluate(params);
-        if (res.code == 200) {
-          this.$message.success("删除成功！");
-          this.getCustomerEvaluateList();
-        } else {
-          this.$message.error("删除失败！");
-        }
-      } catch (_) {
-        this.$message.error("删除失败！");
-      } finally {
-        this.loading = false;
-      }
+    showActionComponent(key) {
+      this.actionType = key;
+      this.showPublishStatus = true;
     },
+    async updateRoleAction() {},
     handleSizeChange() {
-      this.getCustomerEvaluateList();
+      this.getRoleList();
     },
     handleCurrentChange() {
-      this.getCustomerEvaluateList();
+      this.getRoleList();
     }
   }
 };

@@ -158,7 +158,7 @@
                   confirm-button-type="danger"
                   icon="el-icon-info"
                   icon-color="red"
-                  title="删除后不可恢复，确定删除该文章吗？"
+                  title="删除后不可恢复，确定删除该案例吗？"
                   @confirm="handleDelCourse(scope.row)"
                 >
                   <span class="common-action del-action" slot="reference"
@@ -358,7 +358,7 @@ export default {
         const params = {
           id: row.id
         };
-        const res = await articleList.delArticle(params);
+        const res = await industryCase.delCase(params);
         if (res.code == 200) {
           this.$message.success("删除成功！");
           this.getCaseList();
@@ -384,7 +384,7 @@ export default {
           id: this.caseId,
           status: this.actionType == "publish" ? 1 : 0
         };
-        const res = await articleList.updateArticleList(params);
+        const res = await industryCase.publishCase(params);
         if (res.code == 200) {
           this.$message.success(
             `${this.actionType == "publish" ? "发布" : "下架"}案例成功！`

@@ -41,4 +41,13 @@ export default {
       data: params
     })
   },
+  // 发布下架
+  publishCase (params) {
+    return request({
+      url: `/back/api/case/status/update`,
+      method: 'post',
+      data: params
+    })
+  }
+
 }

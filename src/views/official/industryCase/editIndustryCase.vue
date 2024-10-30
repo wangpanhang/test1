@@ -214,7 +214,7 @@ export default {
       articleObj: {
         title: "",
         tags: [],
-        categoryId: 11,
+        categoryId: "11",
         cover: "",
         headImage: "",
         contentHtml: "",
@@ -263,35 +263,35 @@ export default {
       reprinted: "",
       typeList: [
         {
-          value: 11,
+          value: "11",
           label: "服务器"
         },
         {
-          value: 12,
+          value: "12",
           label: "高端装备"
         },
         {
-          value: 13,
+          value: "13",
           label: "工业及传感"
         },
         {
-          value: 14,
+          value: "14",
           label: "器件视觉"
         },
         {
-          value: 15,
+          value: "15",
           label: "通信"
         },
         {
-          value: 16,
+          value: "16",
           label: "医疗电子"
         },
         {
-          value: 17,
+          value: "17",
           label: "汽车电子"
         },
         {
-          value: 18,
+          value: "18",
           label: "计算机"
         }
       ],
